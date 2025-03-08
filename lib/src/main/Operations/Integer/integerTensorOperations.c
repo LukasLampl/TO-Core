@@ -4,8 +4,7 @@
 #include "Tensor/tensor.h"
 #include "Operations/integerTensorOperations.h"
 
-
-void IntegerTensor_multiply(const IntegerTensor* a, const IntegerTensor* b, const IntegerTensor* destination) {
+void checkTensorCompatability(const IntegerTensor* a, const IntegerTensor* b, const IntegerTensor* destination) {
     if (destination == NULL) {
         (void)throwIllegalArgumentException("Destination must not be NULL!");
     }
@@ -23,12 +22,56 @@ void IntegerTensor_multiply(const IntegerTensor* a, const IntegerTensor* b, cons
             (void)throwIllegalArgumentException("Result tensor must have the same shape as input tensors.");
         }
     }
+}
+
+void IntegerTensor_multiply(const IntegerTensor* a, const IntegerTensor* b, const IntegerTensor* destination) {
+    (void)checkTensorCompatability(a, b, destination);
 
     const int* data_a = a->tensor;
     const int* data_b = b->tensor;
     int* dest = destination->tensor;
+    const int* endPtr = data_a + a->base->dataPoints;
 
-    for (size_t dataIndex = 0; dataIndex < a->base->dataPoints; dataIndex++) {
-        dest[dataIndex] = data_a[dataIndex] * data_b[dataIndex];
+    while (data_a < endPtr) {
+        *dest++ = (*data_a++) * (*data_b++);
+    }
+}
+
+void IntegerTensor_divide(const IntegerTensor* a, const IntegerTensor* b, const IntegerTensor* destination) {
+    (void)checkTensorCompatability(a, b, destination);
+
+    const int* data_a = a->tensor;
+    const int* data_b = b->tensor;
+    int* dest = destination->tensor;
+    const int* endPtr = data_a + a->base->dataPoints;
+
+    while (data_a < endPtr) {
+        *dest++ = (*data_a++) / (*data_b++);
+    }
+}
+
+void IntegerTensor_add(const IntegerTensor* a, const IntegerTensor* b, const IntegerTensor* destination) {
+    (void)checkTensorCompatability(a, b, destination);
+
+    const int* data_a = a->tensor;
+    const int* data_b = b->tensor;
+    int* dest = destination->tensor;
+    const int* endPtr = data_a + a->base->dataPoints;
+
+    while (data_a < endPtr) {
+        *dest++ = (*data_a++) + (*data_b++);
+    }
+}
+
+void IntegerTensor_subtract(const IntegerTensor* a, const IntegerTensor* b, const IntegerTensor* destination) {
+    (void)checkTensorCompatability(a, b, destination);
+
+    const int* data_a = a->tensor;
+    const int* data_b = b->tensor;
+    int* dest = destination->tensor;
+    const int* endPtr = data_a + a->base->dataPoints;
+
+    while (data_a < endPtr) {
+        *dest++ = (*data_a++) - (*data_b++);
     }
 }
