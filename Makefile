@@ -6,9 +6,12 @@ CFLAGS = -Wall -Werror -Wpedantic -Ilib/include
 SRC_FILES = $(wildcard lib/src/main/*.c \
 			lib/src/main/Error/*.c \
 			lib/src/main/Operations/*.c \
-			lib/src/main/Operations/Integer/*.c \
 			lib/src/main/Tensor/*.c \
-			lib/src/tests/*.c)
+			lib/src/tests/*.c \
+			lib/src/tests/profile/*.c \
+			lib/src/tests/functionality/*.c \
+			lib/src/tests/profile/Integer/*.c \
+			lib/src/tests/functionality/Integer/*.c)
 
 # Object files (replace .c with .o for each source file)
 OBJ_FILES = $(SRC_FILES:.c=.o)
