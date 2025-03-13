@@ -1,3 +1,24 @@
+/////////////////////////////////////////////////////////////
+///////////////////////    LICENSE    ///////////////////////
+/////////////////////////////////////////////////////////////
+/*
+The TO-Core library for basic Tensor Operations.
+Copyright (C) 2025  Lukas Nian En Lampl
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,6 +26,13 @@
 #include "Tensor/tensor.h"
 #include "Error/exceptions.h"
 
+/**
+ * Checks whether the given dimension is a positive integer
+ * and whether the given shape contains positive integers only as well.
+ * 
+ * @param dimension     The dimension to check.
+ * @param *shape        The shape to check.
+ */
 void checkDimensionAndShape(const int dimensions, const int *shape) {
     if (dimensions <= 0) {
         (void)throwIllegalArgumentException("Dimensions must be a positive integer!");
@@ -19,6 +47,15 @@ void checkDimensionAndShape(const int dimensions, const int *shape) {
     }
 }
 
+/**
+ * Calculates the number of datapoints to expect in a tensor for the
+ * given dimensions and shape.
+ * 
+ * @param dimensions    Number of dimensions.
+ * @param *shape        Shape of the expected tensor.
+ * 
+ * @return The number of datapoints / data elements.
+ */
 int countNumberOfDataIndexes(const int dimensions, const int *shape) {
     int numberOfDataIndexes = 1;
 
@@ -29,6 +66,14 @@ int countNumberOfDataIndexes(const int dimensions, const int *shape) {
     return numberOfDataIndexes;
 }
 
+/**
+ * Creates a base tensor with the given parameters.
+ * 
+ * @param dimensions    The number of dimensions of the tensor.
+ * @param *shape        Shape of the tensor, with the size of each dimension.
+ *
+ * @return A base tensor pointer that can be used as metadata for actual tensors.
+ */
 Tensor* createTensor(const int dimensions, const int *shape) {
     (void)checkDimensionAndShape(dimensions, shape);
     const int numberOfDataIndexes = (int)countNumberOfDataIndexes(dimensions, shape);
@@ -49,6 +94,16 @@ Tensor* createTensor(const int dimensions, const int *shape) {
     return tensor;
 }
 
+/**
+ * Creates an integer based tensor with the given parameters.
+ * All elements will be `0`.
+ * 
+ * @param dimensions    The number of dimensions of the tensor.
+ * @param *shape        Shape of the tensor, with the size of each dimension.
+ * 
+ * @return An IntegerTensor pointer with the metadata in `tensor->base` and
+ * data in `tensor->tensor`.
+ */
 IntegerTensor* createIntegerTensor(const int dimensions, const int *shape) {
     Tensor* base = (Tensor*)createTensor(dimensions, shape);
     IntegerTensor* tensor = (IntegerTensor*)calloc(1, sizeof(IntegerTensor));
@@ -65,6 +120,16 @@ IntegerTensor* createIntegerTensor(const int dimensions, const int *shape) {
     return tensor;
 }
 
+/**
+ * Creates an float based tensor with the given parameters.
+ * All elements will be `0`.
+ * 
+ * @param dimensions    The number of dimensions of the tensor.
+ * @param *shape        Shape of the tensor, with the size of each dimension.
+ * 
+ * @return An FloatTensor pointer with the metadata in `tensor->base` and
+ * data in `tensor->tensor`.
+ */
 FloatTensor* createFloatTensor(const int dimensions, const int *shape) {
     Tensor* base = (Tensor*)createTensor(dimensions, shape);
     FloatTensor* tensor = (FloatTensor*)calloc(1, sizeof(FloatTensor));
@@ -81,6 +146,16 @@ FloatTensor* createFloatTensor(const int dimensions, const int *shape) {
     return tensor;
 }
 
+/**
+ * Creates an double based tensor with the given parameters.
+ * All elements will be `0`.
+ * 
+ * @param dimensions    The number of dimensions of the tensor.
+ * @param *shape        Shape of the tensor, with the size of each dimension.
+ * 
+ * @return An DoubleTensor pointer with the metadata in `tensor->base` and
+ * data in `tensor->tensor`.
+ */
 DoubleTensor* createDoubleTensor(const int dimensions, const int *shape) {
     Tensor* base = (Tensor*)createTensor(dimensions, shape);
     DoubleTensor* tensor = (DoubleTensor*)calloc(1, sizeof(DoubleTensor));
@@ -97,6 +172,9 @@ DoubleTensor* createDoubleTensor(const int dimensions, const int *shape) {
     return tensor;
 }
 
+/**
+ * Prints the data of a given Tensor.
+ */
 void Tensor_print(const Tensor* tensor) {
     (void)printf("Tensor: %p\n", (void*)tensor);
     (void)printf(" > Dimensions: %d\n", tensor->dimensions);
@@ -114,6 +192,9 @@ void Tensor_print(const Tensor* tensor) {
     }
 }
 
+/**
+ * Prints the data of an IntegerTensor recursively.
+ */
 void IntegerTensor_printTensor(const IntegerTensor* tensor, const int dim,
     const int ptr) {
     if (dim >= tensor->base->dimensions - 1) {
@@ -146,11 +227,21 @@ void IntegerTensor_printTensor(const IntegerTensor* tensor, const int dim,
     }
 }
 
+/**
+ * Prints the given IntegerTensor.
+ * 
+ * @param *tensor   Tensor to print.
+ */
 void IntegerTensor_print(const IntegerTensor* tensor) {
     (void)Tensor_print(tensor->base);
     (void)IntegerTensor_printTensor(tensor, 0, 0);
 }
 
+/**
+ * Frees a given Tensor base.
+ * 
+ * @param *tensor   Tensor to free.
+ */
 void freeTensor(Tensor* tensor) {
     if (tensor->shape != NULL) {
         (void)free(tensor->shape);
@@ -160,6 +251,11 @@ void freeTensor(Tensor* tensor) {
     (void)free(tensor);
 }
 
+/**
+ * Frees a given IntegerTensor.
+ * 
+ * @param tensor    The tensor to free.
+ */
 void freeIntegerTensor(IntegerTensor* tensor) {
     if (tensor->base != NULL) {
         (void)freeTensor(tensor->base);
@@ -174,6 +270,11 @@ void freeIntegerTensor(IntegerTensor* tensor) {
     (void)free(tensor);
 }
 
+/**
+ * Frees a given FloatTensor.
+ * 
+ * @param tensor    The tensor to free.
+ */
 void freeFloatTensor(FloatTensor* tensor) {
     if (tensor->base != NULL) {
         (void)freeTensor(tensor->base);
@@ -188,6 +289,11 @@ void freeFloatTensor(FloatTensor* tensor) {
     (void)free(tensor);
 }
 
+/**
+ * Frees a given DoubleTensor.
+ * 
+ * @param tensor    The tensor to free.
+ */
 void freeDoubleTensor(DoubleTensor* tensor) {
     if (tensor->base != NULL) {
         (void)freeTensor(tensor->base);
