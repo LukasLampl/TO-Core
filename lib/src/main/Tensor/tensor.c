@@ -97,6 +97,60 @@ DoubleTensor* createDoubleTensor(const int dimensions, const int *shape) {
     return tensor;
 }
 
+void Tensor_print(const Tensor* tensor) {
+    (void)printf("Tensor: %p\n", (void*)tensor);
+    (void)printf(" > Dimensions: %d\n", tensor->dimensions);
+    (void)printf(" > Elements: %ld\n", tensor->dataPoints);
+    (void)printf(" > Shape: [");
+
+    for (int i = 0; i < tensor->dimensions; i++) {
+        (void)printf("%d", tensor->shape[i]);
+
+        if (i + 1 < tensor->dimensions) {
+            (void)printf(", ");
+        } else {
+            (void)printf("]\n");
+        }
+    }
+}
+
+void IntegerTensor_printTensor(const IntegerTensor* tensor, const int dim,
+    const int ptr) {
+    if (dim >= tensor->base->dimensions - 1) {
+        const int width = tensor->base->shape[tensor->base->dimensions - 1];
+        (void)printf("[");
+
+        for (int i = 0; i < width; i++) {
+            (void)printf("%d", tensor->tensor[ptr + i]);
+            
+            if (i + 1 < width) {
+                (void)printf(", ");
+            }
+        }
+
+        (void)printf("]");
+    } else {
+        (void)printf("[");
+        const int dimSize = tensor->base->shape[dim];
+
+        for (int i = 0; i < dimSize; i++) {
+            int newPtr = ptr + (i * dimSize);
+            (void)IntegerTensor_printTensor(tensor, dim + 1, newPtr);
+
+            if (i + 1 < dimSize) {
+                (void)printf(", ");
+            }
+        }
+
+        (void)printf("]");
+    }
+}
+
+void IntegerTensor_print(const IntegerTensor* tensor) {
+    (void)Tensor_print(tensor->base);
+    (void)IntegerTensor_printTensor(tensor, 0, 0);
+}
+
 void freeTensor(Tensor* tensor) {
     if (tensor->shape != NULL) {
         (void)free(tensor->shape);

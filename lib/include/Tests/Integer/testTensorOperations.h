@@ -17,4 +17,7 @@ void profileTensorAdd_001();
 void profileTensorDivide_001();
 void profileTensorSubtract_001();
 
+void testTensorConvole1D_001();
+void testTensorConvolve2D_001();
+
 #endif

@@ -1,0 +1,61 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "Tests/Integer/testTensorOperations.h"
+#include "Tensor/tensor.h"
+#include "Operations/convolution.h"
+
+#include "testSuite.h"
+
+void testTensorConvole1D_001() {
+    int shape[] = {5};
+    int kernelShape[] = {2};
+    IntegerTensor* t = createIntegerTensor(1, shape);
+    IntegerTensor* kernel = createIntegerTensor(1, kernelShape);
+    IntegerTensor* dest = createIntegerTensor(1, shape);
+
+    t->tensor[0] = 5;
+    t->tensor[1] = -4;
+    t->tensor[2] = 43;
+    t->tensor[3] = -17;
+    t->tensor[4] = 0;
+
+    kernel->tensor[0] = 3;
+    kernel->tensor[1] = -17;
+
+    IntegerTensor_convolve1D(t, kernel, dest, 1);
+    printf("\nConvolution 1D\n");
+    printf("=======================\n");
+    IntegerTensor_print(dest);
+    printf("\n");
+}
+
+void testTensorConvolve2D_001() {
+    int shape[] = {3, 3};
+    int kernelShape[] = {2, 2};
+    IntegerTensor* t = createIntegerTensor(2, shape);
+    IntegerTensor* kernel = createIntegerTensor(2, kernelShape);
+    IntegerTensor* dest = createIntegerTensor(2, shape);
+
+    t->tensor[0] = 12;
+    t->tensor[1] = 5;
+    t->tensor[2] = -34;
+    t->tensor[3] = 6;
+    t->tensor[4] = 12;
+    t->tensor[5] = -4;
+    t->tensor[6] = -7;
+    t->tensor[7] = 56;
+    t->tensor[8] = 98;
+
+    kernel->tensor[0] = 6;
+    kernel->tensor[1] = -2;
+    kernel->tensor[2] = 3;
+    kernel->tensor[3] = -7;
+
+    IntegerTensor_convolve2D(t, kernel, dest, 1);
+
+    printf("\nConvolution 2D\n");
+    printf("=======================\n");
+    IntegerTensor_print(dest);
+    printf("\n");
+}

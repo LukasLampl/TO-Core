@@ -28,6 +28,8 @@ IntegerTensor* createIntegerTensor(const int dimensions, const int *shape);
 FloatTensor* createFloatTensor(const int dimensions, const int *shape);
 DoubleTensor* createDoubleTensor(const int dimensions, const int *shape);
 
+void IntegerTensor_print(const IntegerTensor* tensor);
+
 void freeIntegerTensor(IntegerTensor* tensor);
 void freeFloatTensor(FloatTensor* tensor);
 void freeDoubleTensor(DoubleTensor* tensor);
