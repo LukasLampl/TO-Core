@@ -118,7 +118,7 @@ int IntegerTensor_convolve_kernelDotProduct(const IntegerTensor* tensor,
     const int tensorPtr, const int kernelPtr, const int highestKernelDimension,
     int* destPtr, const int* tensorDimJumpTable, const int* kernelJumpTable) {
     int dotProduct = 0;
-    
+
     if (dim + 1 >= kernel->base->dimensions) {
         dotProduct = (int)IntegerTensor_dotProduct1D(tensor, kernel, tensorPtr, kernelPtr);
 
@@ -129,12 +129,13 @@ int IntegerTensor_convolve_kernelDotProduct(const IntegerTensor* tensor,
         return dotProduct;
     }
 
-    const int t_size = tensorDimJumpTable[dim];
-    const int k_size = kernelJumpTable[dim];
+    const int k_size = kernel->base->shape[dim];
+    const int k_off = kernelJumpTable[dim];
+    const int t_off = tensorDimJumpTable[dim];
     
     for (int i = 0; i < k_size; i++) {
-        int newKernelPtr = i * k_size + kernelPtr;
-        int newTensorPtr = i * t_size + tensorPtr;
+        int newKernelPtr = i * k_off + kernelPtr;
+        int newTensorPtr = i * t_off + tensorPtr;
 
         dotProduct += (int)IntegerTensor_convolve_kernelDotProduct(tensor,
             kernel, dest, dim + 1, newTensorPtr, newKernelPtr, false, destPtr, tensorDimJumpTable, kernelJumpTable);
@@ -184,7 +185,9 @@ void IntegerTensor_convolve_moveKernel(const IntegerTensor* tensor,
     const int t_size = tensor->base->shape[dim];
     const int k_size = kernel->base->shape[dim];
     const int d_size = dest->base->shape[dim];
+    const int tensorDimOff = tensorDimJumpTable[dim];
     const int min_dest_size = (t_size - k_size) / stride + 1;
+    const int nextDim = dim + 1;
 
     if (d_size < min_dest_size) {
         (void)throwIllegalArgumentException("The destination tensor is smaller than allowed!");
@@ -192,10 +195,11 @@ void IntegerTensor_convolve_moveKernel(const IntegerTensor* tensor,
     }
 
     for (int i = 0; (i + k_size) <= t_size; i += stride) {
-        int innerTensorPtr = dim + 1 >= tensor->base->dimensions ?
-                            tensorPtr + (i * 1) : i * t_size + tensorPtr;
+        int innerTensorPtr = nextDim >= tensor->base->dimensions ?
+                            tensorPtr + i
+                            : i * tensorDimOff + tensorPtr;
         (void)IntegerTensor_convolve_moveKernel(tensor,
-            kernel, dest, dim + 1, stride, innerTensorPtr,
+            kernel, dest, nextDim, stride, innerTensorPtr,
             false, destPtr, tensorDimJumpTable, kernelJumpTable);
     }
 }
