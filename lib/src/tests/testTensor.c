@@ -40,6 +40,7 @@ int main() {
     testTensorSubtract_001();*/
     testTensorConvole1D_001();
     testTensorConvolve2D_001();
+    testTensorConvolve3D_001();
 
     /*if (ENV_PROFILE_TESTING) {
         profileTensorAdd_001();

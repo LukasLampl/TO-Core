@@ -44,7 +44,8 @@ void testTensorConvole1D_001() {
     kernel->tensor[0] = 3;
     kernel->tensor[1] = -17;
 
-    IntegerTensor_convolve1D(t, kernel, dest, 1);
+    IntegerTensor_convolve(t, kernel, dest, 1);
+
     printf("\nConvolution 1D\n");
     printf("=======================\n");
     IntegerTensor_print(dest);
@@ -58,24 +59,46 @@ void testTensorConvolve2D_001() {
     IntegerTensor* kernel = createIntegerTensor(2, kernelShape);
     IntegerTensor* dest = createIntegerTensor(2, shape);
 
-    t->tensor[0] = 12;
-    t->tensor[1] = 5;
-    t->tensor[2] = -34;
-    t->tensor[3] = 6;
-    t->tensor[4] = 12;
-    t->tensor[5] = -4;
-    t->tensor[6] = -7;
-    t->tensor[7] = 56;
-    t->tensor[8] = 98;
+    t->tensor[0] = 12;      t->tensor[1] = 5;       t->tensor[2] = -34;
+    t->tensor[3] = 6;       t->tensor[4] = 12;      t->tensor[5] = -4;
+    t->tensor[6] = -7;      t->tensor[7] = 56;      t->tensor[8] = 98;
 
-    kernel->tensor[0] = 6;
-    kernel->tensor[1] = -2;
-    kernel->tensor[2] = 3;
-    kernel->tensor[3] = -7;
+    kernel->tensor[0] = 6;  kernel->tensor[1] = -2;
+    kernel->tensor[2] = 3;  kernel->tensor[3] = -7;
 
-    IntegerTensor_convolve2D(t, kernel, dest, 1);
+    IntegerTensor_convolve(t, kernel, dest, 1);
 
     printf("\nConvolution 2D\n");
+    printf("=======================\n");
+    IntegerTensor_print(dest);
+    printf("\n");
+}
+
+void testTensorConvolve3D_001() {
+    int shape[] = {2, 3, 3};
+    int kernelShape[] = {2, 2, 2};
+    int outputShape[] = {1, 2, 2};
+    IntegerTensor* t = createIntegerTensor(3, shape);
+    IntegerTensor* kernel = createIntegerTensor(3, kernelShape);
+    IntegerTensor* dest = createIntegerTensor(3, outputShape);
+
+    t->tensor[0] = 12;      t->tensor[1] = 5;       t->tensor[2] = -34;
+    t->tensor[3] = 67;      t->tensor[4] = -45;     t->tensor[5] = 1;
+    t->tensor[6] = -2;      t->tensor[7] = 7;       t->tensor[8] = 0;
+
+    t->tensor[9] = 3;       t->tensor[10] = 78;     t->tensor[11] = 0;
+    t->tensor[12] = 2;      t->tensor[13] = 65;     t->tensor[14] = 13;
+    t->tensor[15] = 1;      t->tensor[16] = 7;      t->tensor[17] = 33;
+
+    kernel->tensor[0] = 6;  kernel->tensor[1] = -2;
+    kernel->tensor[2] = 3;  kernel->tensor[3] = -1;
+
+    kernel->tensor[4] = 4;  kernel->tensor[5] = -12;
+    kernel->tensor[6] = 9;  kernel->tensor[7] = -18;
+
+    IntegerTensor_convolve(t, kernel, dest, 1);
+
+    printf("\nConvolution 3D\n");
     printf("=======================\n");
     IntegerTensor_print(dest);
     printf("\n");

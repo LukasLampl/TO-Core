@@ -196,7 +196,7 @@ void Tensor_print(const Tensor* tensor) {
  * Prints the data of an IntegerTensor recursively.
  */
 void IntegerTensor_printTensor(const IntegerTensor* tensor, const int dim,
-    const int ptr) {
+    const int ptr, const int* jumpTable) {
     if (dim >= tensor->base->dimensions - 1) {
         const int width = tensor->base->shape[tensor->base->dimensions - 1];
         (void)printf("[");
@@ -213,10 +213,11 @@ void IntegerTensor_printTensor(const IntegerTensor* tensor, const int dim,
     } else {
         (void)printf("[");
         const int dimSize = tensor->base->shape[dim];
+        const int offsetTillNextDim = jumpTable[dim];
 
         for (int i = 0; i < dimSize; i++) {
-            int newPtr = ptr + (i * dimSize);
-            (void)IntegerTensor_printTensor(tensor, dim + 1, newPtr);
+            int newPtr = ptr + (i * offsetTillNextDim);
+            (void)IntegerTensor_printTensor(tensor, dim + 1, newPtr, jumpTable);
 
             if (i + 1 < dimSize) {
                 (void)printf(", ");
@@ -225,6 +226,44 @@ void IntegerTensor_printTensor(const IntegerTensor* tensor, const int dim,
 
         (void)printf("]");
     }
+
+    if (dim == 0) {
+        (void)printf("\n");
+    }
+}
+
+/**
+ * Generates a jump table for each dimension.
+ * 
+ * <p><b>The result:</b><br>
+ * The resulting output will be an integer array that can be access at
+ * any index `i` and provides the number of data to skip, until the next
+ * dimension would start.
+ * </p>
+ * 
+ * @param *tensor   The tensor from which to get the jump table from.
+ * 
+ * @return A pointer to an integer array with the sizes of each dimension.
+ */
+int *generateDimensionBasedCummulativeJumpTable(const Tensor* tensor) {
+    if (tensor->dimensions <= 0) {
+        (void)throwIllegalArgumentException("Tensor must have a dimension of a positive integer.");
+        return NULL;
+    }
+
+    int* jumpTable = (int*)calloc(tensor->dimensions, sizeof(int));
+
+    if (jumpTable == NULL) {
+        (void)throwMemoryAllocationException("Error on allocating memory for jump table (convolution).");
+        return NULL;
+    }
+
+    for (int i = tensor->dimensions - 1; i >= 0; i--) {
+        jumpTable[i] = i == (tensor->dimensions - 1) ?
+                            1 : jumpTable[i + 1] * tensor->shape[i + 1];
+    }
+
+    return jumpTable;
 }
 
 /**
@@ -234,7 +273,13 @@ void IntegerTensor_printTensor(const IntegerTensor* tensor, const int dim,
  */
 void IntegerTensor_print(const IntegerTensor* tensor) {
     (void)Tensor_print(tensor->base);
-    (void)IntegerTensor_printTensor(tensor, 0, 0);
+    int* jumpTable = generateDimensionBasedCummulativeJumpTable(tensor->base);
+
+    if (jumpTable == NULL) {
+        return;
+    }
+
+    (void)IntegerTensor_printTensor(tensor, 0, 0, jumpTable);
 }
 
 /**

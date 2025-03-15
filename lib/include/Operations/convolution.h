@@ -24,12 +24,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "Tensor/tensor.h"
 
-void IntegerTensor_convolve1D(const IntegerTensor* tensor,
-    const IntegerTensor* kernel, const IntegerTensor* destination,
-    const int stride);
+int IntegerTensor_dotProduct_1D(const IntegerTensor* tensor,
+    const IntegerTensor* kernel, const int tensorOffset,
+    const int kernelOffset);
 
-void IntegerTensor_convolve2D(const IntegerTensor* tensor,
-    const IntegerTensor* kernel, const IntegerTensor* destination,
-    const int stride);
+void IntegerTensor_convolve(const IntegerTensor* tensor,
+    const IntegerTensor* kernel, const IntegerTensor* dest, const int stride);
 
 #endif
