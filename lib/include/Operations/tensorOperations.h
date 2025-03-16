@@ -24,6 +24,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "Tensor/tensor.h"
 
+void checkTensorCompatability(const IntegerTensor* a, const IntegerTensor* b);
+
 void IntegerTensor_multiply(const IntegerTensor* a, const IntegerTensor* b, const IntegerTensor* destination);
 void IntegerTensor_divide(const IntegerTensor* a, const IntegerTensor* b, const IntegerTensor* destination);
 void IntegerTensor_add(const IntegerTensor* a, const IntegerTensor* b, const IntegerTensor* destination);

@@ -19,41 +19,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
+#ifndef MATH_H
+#define MATH_H
 
-#include "testSuite.h"
-#include "globals.h"
-#include "Tensor/tensor.h"
-#include "Operations/tensorOperations.h"
-#include "Operations/convolution.h"
+int int_abs(const int number);
 
-#include "Tests/Integer/testTensorOperations.h"
-
-int main() {
-    ENV_UNIT_TESTING = 1;
-
-    /*testTensorAdd_001();
-    testTensorDivide_001();
-    testTensorMultiply_001();
-    testTensorSubtract_001();
-    testTensorConvole1D_001();
-    testTensorConvolve2D_001();
-
-    testTensorConvolve3D_001();
-    testTensorConvolve3D_002();*/
-
-    testTensorMSE_001();
-    testTensorSAD_001();
-    testTensorMAD_001();
-
-    /*if (ENV_PROFILE_TESTING) {
-        profileTensorAdd_001();
-        profileTensorDivide_001();
-        profileTensorMultiply_001();
-        profileTensorSubtract_001();
-
-        profileTensorConvolve3D_001();
-    }*/
-}
+#endif

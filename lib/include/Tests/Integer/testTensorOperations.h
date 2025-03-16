@@ -45,4 +45,8 @@ void testTensorConvolve3D_002();
 
 void profileTensorConvolve3D_001();
 
+void testTensorMSE_001();
+void testTensorSAD_001();
+void testTensorMAD_001();
+
 #endif
