@@ -53,6 +53,31 @@ void testTensorMultiply_001() {
     freeIntegerTensor(tensor_c);
 }
 
+void testTensorMultiply_002() {
+    const int N = 16;
+    int shape[1] = {N};
+    int dimensions = 1;
+
+    FloatTensor* tensor_a = createFloatTensor(dimensions, shape);
+    FloatTensor* tensor_b = createFloatTensor(dimensions, shape);
+    FloatTensor* tensor_c = createFloatTensor(dimensions, shape);
+
+    for (int i = 0; i < N; i++) {
+        tensor_a->tensor[i] = i;
+        tensor_b->tensor[i] = N - i;
+    }
+
+    FloatTensor_multiply(tensor_a, tensor_b, tensor_c);
+
+    for (int i = 0; i < N; i++) {
+        testSuite_assertEquals(tensor_c->tensor[i], (i * (N - i)));
+    }
+
+    freeFloatTensor(tensor_a);
+    freeFloatTensor(tensor_b);
+    freeFloatTensor(tensor_c);
+}
+
 void testTensorAdd_001() {
     const int N = 16;
     int shape[1] = {N};

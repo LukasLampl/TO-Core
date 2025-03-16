@@ -26,6 +26,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "Tensor/tensor.h"
 #include "Error/exceptions.h"
 
+enum PrintFormat {
+    DECIMAL,
+    FLOAT,
+    DOUBLE
+};
+
 /**
  * Checks whether the given dimension is a positive integer
  * and whether the given shape contains positive integers only as well.
@@ -175,7 +181,7 @@ DoubleTensor* createDoubleTensor(const int dimensions, const int *shape) {
 /**
  * Prints the data of a given Tensor.
  */
-void Tensor_print(const Tensor* tensor) {
+void Tensor_printMeta(const Tensor* tensor) {
     (void)printf("Tensor: %p\n", (void*)tensor);
     (void)printf(" > Dimensions: %d\n", tensor->dimensions);
     (void)printf(" > Elements: %ld\n", tensor->dataPoints);
@@ -195,14 +201,24 @@ void Tensor_print(const Tensor* tensor) {
 /**
  * Prints the data of an IntegerTensor recursively.
  */
-void IntegerTensor_printTensor(const IntegerTensor* tensor, const int dim,
-    const int ptr, const int* jumpTable) {
-    if (dim >= tensor->base->dimensions - 1) {
-        const int width = tensor->base->shape[tensor->base->dimensions - 1];
+void printTensor(const void* tensor, const Tensor* base, const int dim,
+    const int ptr, const int* jumpTable, const enum PrintFormat format) {
+    if (dim >= base->dimensions - 1) {
+        const int width = base->shape[base->dimensions - 1];
         (void)printf("[");
 
         for (int i = 0; i < width; i++) {
-            (void)printf("%d", tensor->tensor[ptr + i]);
+            switch (format) {
+            case DECIMAL:
+                (void)printf("%d", ((int*)tensor)[ptr + i]);
+                break;
+            case FLOAT:
+                (void)printf("%f", ((float*)tensor)[ptr + i]);
+                break;
+            case DOUBLE:
+                (void)printf("%f", ((double*)tensor)[ptr + i]);
+                break;
+            }
             
             if (i + 1 < width) {
                 (void)printf(", ");
@@ -212,12 +228,12 @@ void IntegerTensor_printTensor(const IntegerTensor* tensor, const int dim,
         (void)printf("]");
     } else {
         (void)printf("[");
-        const int dimSize = tensor->base->shape[dim];
+        const int dimSize = base->shape[dim];
         const int offsetTillNextDim = jumpTable[dim];
 
         for (int i = 0; i < dimSize; i++) {
             int newPtr = ptr + (i * offsetTillNextDim);
-            (void)IntegerTensor_printTensor(tensor, dim + 1, newPtr, jumpTable);
+            (void)printTensor(tensor, base, dim + 1, newPtr, jumpTable, format);
 
             if (i + 1 < dimSize) {
                 (void)printf(", ");
@@ -272,14 +288,49 @@ int *generateDimensionBasedCummulativeJumpTable(const Tensor* tensor) {
  * @param *tensor   Tensor to print.
  */
 void IntegerTensor_print(const IntegerTensor* tensor) {
-    (void)Tensor_print(tensor->base);
+    (void)Tensor_printMeta(tensor->base);
     int* jumpTable = generateDimensionBasedCummulativeJumpTable(tensor->base);
 
     if (jumpTable == NULL) {
         return;
     }
 
-    (void)IntegerTensor_printTensor(tensor, 0, 0, jumpTable);
+    (void)printTensor(tensor->tensor, tensor->base, 0, 0, jumpTable, DECIMAL);
+    (void)free(jumpTable);
+}
+
+/**
+ * Prints the given FloatTensor.
+ * 
+ * @param *tensor   Tensor to print.
+ */
+void FloatTensor_print(const FloatTensor* tensor) {
+    (void)Tensor_printMeta(tensor->base);
+    int* jumpTable = generateDimensionBasedCummulativeJumpTable(tensor->base);
+
+    if (jumpTable == NULL) {
+        return;
+    }
+
+    (void)printTensor(tensor->tensor, tensor->base, 0, 0, jumpTable, FLOAT);
+    (void)free(jumpTable);
+}
+
+/**
+ * Prints the given DoubleTensor.
+ * 
+ * @param *tensor   Tensor to print.
+ */
+void DoubleTensor_print(const DoubleTensor* tensor) {
+    (void)Tensor_printMeta(tensor->base);
+    int* jumpTable = generateDimensionBasedCummulativeJumpTable(tensor->base);
+
+    if (jumpTable == NULL) {
+        return;
+    }
+
+    (void)printTensor(tensor->tensor, tensor->base, 0, 0, jumpTable, DOUBLE);
+    (void)free(jumpTable);
 }
 
 /**

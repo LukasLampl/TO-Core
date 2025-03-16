@@ -24,6 +24,25 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "Tensor/tensor.h"
 #include "Error/exceptions.h"
 
+typedef int (*IntegerBinaryOperator)(int, int);
+typedef float (*FloatBinaryOperator)(float, float);
+typedef double (*DoubleBinaryOperator)(double, double);
+
+int Integer_multiply(int a, int b) {return a * b;}
+int Integer_add(int a, int b) {return a + b;}
+int Integer_subtract(int a, int b) {return a - b;}
+int Integer_divide(int a, int b) {return a / b;}
+
+float Float_multiply(float a, float b) {return a * b;}
+float Float_add(float a, float b) {return a + b;}
+float Float_subtract(float a, float b) {return a - b;}
+float Float_divide(float a, float b) {return a / b;}
+
+double Double_multiply(double a, double b) {return a * b;}
+double Double_add(double a, double b) {return a + b;}
+double Double_subtract(double a, double b) {return a - b;}
+double Double_divide(double a, double b) {return a / b;}
+
 /**
  * Returns the element index in the given tensors data for
  * a given indeces array.
@@ -61,15 +80,102 @@ int getElementIndex(const Tensor* tensor, const int* indices) {
  * @throws IllegalArgumentException - When either the dimension does not match
  * or the shapes are different.
  */
-void checkTensorCompatability(const IntegerTensor* a, const IntegerTensor* b) {
-    if (a->base->dimensions != b->base->dimensions) {
+void checkTensorCompatability(const Tensor* a, const Tensor* b) {
+    if (a->dimensions != b->dimensions) {
         (void)throwIllegalArgumentException("Can't operate on different shaped tensors!");
     }
 
-    for (int i = 0; i < a->base->dimensions; i++) {
-        if (a->base->shape[i] != b->base->shape[i]) {
+    for (int i = 0; i < a->dimensions; i++) {
+        if (a->shape[i] != b->shape[i]) {
             (void)throwIllegalArgumentException("To perform multiplication the tensor shapes must be equal.");
         }
+    }
+}
+
+/**
+ * Executes the given operations between tensor a and b and writes the results
+ * to the destination tensor.
+ * 
+ * <p><b>Important:</b><br>
+ * This function only allows operations between two identically
+ * shaped tensors.
+ * </p>
+ * 
+ * @param *a            Tensor to apply operation.
+ * @param *b            Tensor to apply operation.
+ * @param *destination  Tensor to write to.
+ * @param operation     The operation to execute.
+ */
+void IntegerTensor_operate(const IntegerTensor* a, const IntegerTensor* b,
+    const IntegerTensor* destination, const IntegerBinaryOperator operation) {
+    (void)checkTensorCompatability(a->base, b->base);
+    (void)checkTensorCompatability(a->base, destination->base);
+
+    const int* data_a = a->tensor;
+    const int* data_b = b->tensor;
+    int* dest = destination->tensor;
+    const int* endPtr = data_a + a->base->dataPoints;
+
+    while (data_a < endPtr) {
+        *dest++ = operation((*data_a++), (*data_b++));
+    }
+}
+
+/**
+ * Executes the given operations between tensor a and b and writes the results
+ * to the destination tensor.
+ * 
+ * <p><b>Important:</b><br>
+ * This function only allows operations between two identically
+ * shaped tensors.
+ * </p>
+ * 
+ * @param *a            Tensor to apply operation.
+ * @param *b            Tensor to apply operation.
+ * @param *destination  Tensor to write to.
+ * @param operation     The operation to execute.
+ */
+void FloatTensor_operate(const FloatTensor* a, const FloatTensor* b,
+    const FloatTensor* destination, const FloatBinaryOperator operation) {
+    (void)checkTensorCompatability(a->base, b->base);
+    (void)checkTensorCompatability(a->base, destination->base);
+
+    const float* data_a = a->tensor;
+    const float* data_b = b->tensor;
+    float* dest = destination->tensor;
+    const float* endPtr = data_a + a->base->dataPoints;
+
+    while (data_a < endPtr) {
+        *dest++ = operation((*data_a++), (*data_b++));
+    }
+}
+
+/**
+ * Executes the given operations between tensor a and b and writes the results
+ * to the destination tensor.
+ * 
+ * <p><b>Important:</b><br>
+ * This function only allows operations between two identically
+ * shaped tensors.
+ * </p>
+ * 
+ * @param *a            Tensor to apply operation.
+ * @param *b            Tensor to apply operation.
+ * @param *destination  Tensor to write to.
+ * @param operation     The operation to execute.
+ */
+void DoubleTensor_operate(const DoubleTensor* a, const DoubleTensor* b,
+    const DoubleTensor* destination, const DoubleBinaryOperator operation) {
+    (void)checkTensorCompatability(a->base, b->base);
+    (void)checkTensorCompatability(a->base, destination->base);
+
+    const double* data_a = a->tensor;
+    const double* data_b = b->tensor;
+    double* dest = destination->tensor;
+    const double* endPtr = data_a + a->base->dataPoints;
+
+    while (data_a < endPtr) {
+        *dest++ = operation((*data_a++), (*data_b++));
     }
 }
 
@@ -88,17 +194,7 @@ void checkTensorCompatability(const IntegerTensor* a, const IntegerTensor* b) {
  */
 void IntegerTensor_multiply(const IntegerTensor* a, const IntegerTensor* b,
     const IntegerTensor* destination) {
-    (void)checkTensorCompatability(a, b);
-    (void)checkTensorCompatability(a, destination);
-
-    const int* data_a = a->tensor;
-    const int* data_b = b->tensor;
-    int* dest = destination->tensor;
-    const int* endPtr = data_a + a->base->dataPoints;
-
-    while (data_a < endPtr) {
-        *dest++ = (*data_a++) * (*data_b++);
-    }
+    (void)IntegerTensor_operate(a, b, destination, Integer_multiply);
 }
 
 /**
@@ -114,18 +210,9 @@ void IntegerTensor_multiply(const IntegerTensor* a, const IntegerTensor* b,
  * @param *b            Pointer to the divisor tensor.
  * @param *destination  Pointer to the destination tensor in which to write.
  */
-void IntegerTensor_divide(const IntegerTensor* a, const IntegerTensor* b, const IntegerTensor* destination) {
-    (void)checkTensorCompatability(a, b);
-    (void)checkTensorCompatability(a, destination);
-
-    const int* data_a = a->tensor;
-    const int* data_b = b->tensor;
-    int* dest = destination->tensor;
-    const int* endPtr = data_a + a->base->dataPoints;
-
-    while (data_a < endPtr) {
-        *dest++ = (*data_a++) / (*data_b++);
-    }
+void IntegerTensor_divide(const IntegerTensor* a, const IntegerTensor* b,
+    const IntegerTensor* destination) {
+    (void)IntegerTensor_operate(a, b, destination, Integer_divide);
 }
 
 /**
@@ -141,18 +228,9 @@ void IntegerTensor_divide(const IntegerTensor* a, const IntegerTensor* b, const 
  * @param *b            Pointer to the second summand tensor.
  * @param *destination  Pointer to the destination tensor in which to write.
  */
-void IntegerTensor_add(const IntegerTensor* a, const IntegerTensor* b, const IntegerTensor* destination) {
-    (void)checkTensorCompatability(a, b);
-    (void)checkTensorCompatability(a, destination);
-
-    const int* data_a = a->tensor;
-    const int* data_b = b->tensor;
-    int* dest = destination->tensor;
-    const int* endPtr = data_a + a->base->dataPoints;
-
-    while (data_a < endPtr) {
-        *dest++ = (*data_a++) + (*data_b++);
-    }
+void IntegerTensor_add(const IntegerTensor* a, const IntegerTensor* b,
+    const IntegerTensor* destination) {
+    (void)IntegerTensor_operate(a, b, destination, Integer_add);
 }
 
 /**
@@ -168,18 +246,9 @@ void IntegerTensor_add(const IntegerTensor* a, const IntegerTensor* b, const Int
  * @param *b            Pointer to the subtrahend tensor.
  * @param *destination  Pointer to the destination tensor in which to write.
  */
-void IntegerTensor_subtract(const IntegerTensor* a, const IntegerTensor* b, const IntegerTensor* destination) {
-    (void)checkTensorCompatability(a, b);
-    (void)checkTensorCompatability(a, destination);
-
-    const int* data_a = a->tensor;
-    const int* data_b = b->tensor;
-    int* dest = destination->tensor;
-    const int* endPtr = data_a + a->base->dataPoints;
-
-    while (data_a < endPtr) {
-        *dest++ = (*data_a++) - (*data_b++);
-    }
+void IntegerTensor_subtract(const IntegerTensor* a, const IntegerTensor* b,
+    const IntegerTensor* destination) {
+    (void)IntegerTensor_operate(a, b, destination, Integer_subtract);
 }
 
 /**
@@ -190,12 +259,199 @@ void IntegerTensor_subtract(const IntegerTensor* a, const IntegerTensor* b, cons
  * @param *scalar       Scalar to multiply the tensor with.
  * @param *destination  Pointer to the destination tensor in which to write.
  */
-void IntegerTensor_scalarMultiply(const IntegerTensor* a, const int scalar, const IntegerTensor* destination) {
-    (void)checkTensorCompatability(a, destination);
+void IntegerTensor_scalarMultiply(const IntegerTensor* a, const int scalar,
+    const IntegerTensor* destination) {
+    (void)checkTensorCompatability(a->base, destination->base);
 
     const int* data_a = a->tensor;
     int* dest = destination->tensor;
     const int* endPtr = data_a + a->base->dataPoints;
+
+    while (data_a < endPtr) {
+        *dest++ = scalar * (*data_a++);
+    }
+}
+
+/**
+ * Multiplies two given tensors and writes the results to a given
+ * destination tensor.
+ * 
+ * <p><b>Important:</b><br>
+ * This function only allows multiplication of two identically
+ * shaped tensors.
+ * </p>
+ * 
+ * @param *a            Pointer to the multiplier tensor.
+ * @param *b            Pointer to the multiplicand tensor.
+ * @param *destination  Pointer to the destination tensor in which to write.
+ */
+void FloatTensor_multiply(const FloatTensor* a, const FloatTensor* b,
+    const FloatTensor* destination) {
+    (void)FloatTensor_operate(a, b, destination, Float_multiply);
+}
+
+/**
+ * Divides two given tensors and writes the results to a given
+ * destination tensor.
+ * 
+ * <p><b>Important:</b><br>
+ * This function only allows division of two identically
+ * shaped tensors.
+ * </p>
+ * 
+ * @param *a            Pointer to the dividend tensor.
+ * @param *b            Pointer to the divisor tensor.
+ * @param *destination  Pointer to the destination tensor in which to write.
+ */
+void FloatTensor_divide(const FloatTensor* a, const FloatTensor* b,
+    const FloatTensor* destination) {
+    (void)FloatTensor_operate(a, b, destination, Float_divide);
+}
+
+/**
+ * Adds two given tensors and writes the results to a given
+ * destination tensor.
+ * 
+ * <p><b>Important:</b><br>
+ * This function only allows addition of two identically
+ * shaped tensors.
+ * </p>
+ * 
+ * @param *a            Pointer to the first summand tensor.
+ * @param *b            Pointer to the second summand tensor.
+ * @param *destination  Pointer to the destination tensor in which to write.
+ */
+void FloatTensor_add(const FloatTensor* a, const FloatTensor* b,
+    const FloatTensor* destination) {
+    (void)FloatTensor_operate(a, b, destination, Float_add);
+}
+
+/**
+ * Subtracts two given tensors and writes the results to a given
+ * destination tensor.
+ * 
+ * <p><b>Important:</b><br>
+ * This function only allows subtraction of two identically
+ * shaped tensors.
+ * </p>
+ * 
+ * @param *a            Pointer to the minuend tensor.
+ * @param *b            Pointer to the subtrahend tensor.
+ * @param *destination  Pointer to the destination tensor in which to write.
+ */
+void FloatTensor_subtract(const FloatTensor* a, const FloatTensor* b,
+    const FloatTensor* destination) {
+    (void)FloatTensor_operate(a, b, destination, Float_subtract);
+}
+
+/**
+ * Multiplies a given tensor by a given scalar and writes
+ * the results into a given destination tensor.
+ * 
+ * @param *a            Pointer to the tensor to multiply.
+ * @param *scalar       Scalar to multiply the tensor with.
+ * @param *destination  Pointer to the destination tensor in which to write.
+ */
+void FloatTensor_scalarMultiply(const FloatTensor* a, const float scalar,
+    const FloatTensor* destination) {
+    (void)checkTensorCompatability(a->base, destination->base);
+
+    const float* data_a = a->tensor;
+    float* dest = destination->tensor;
+    const float* endPtr = data_a + a->base->dataPoints;
+
+    while (data_a < endPtr) {
+        *dest++ = scalar * (*data_a++);
+    }
+}
+
+/**
+ * Multiplies two given tensors and writes the results to a given
+ * destination tensor.
+ * 
+ * <p><b>Important:</b><br>
+ * This function only allows multiplication of two identically
+ * shaped tensors.
+ * </p>
+ * 
+ * @param *a            Pointer to the multiplier tensor.
+ * @param *b            Pointer to the multiplicand tensor.
+ * @param *destination  Pointer to the destination tensor in which to write.
+ */
+void DoubleTensor_multiply(const DoubleTensor* a, const DoubleTensor* b,
+    const DoubleTensor* destination) {
+    (void)DoubleTensor_operate(a, b, destination, Double_multiply);
+}
+
+/**
+ * Divides two given tensors and writes the results to a given
+ * destination tensor.
+ * 
+ * <p><b>Important:</b><br>
+ * This function only allows division of two identically
+ * shaped tensors.
+ * </p>
+ * 
+ * @param *a            Pointer to the dividend tensor.
+ * @param *b            Pointer to the divisor tensor.
+ * @param *destination  Pointer to the destination tensor in which to write.
+ */
+void DoubleTensor_divide(const DoubleTensor* a, const DoubleTensor* b,
+    const DoubleTensor* destination) {
+    (void)DoubleTensor_operate(a, b, destination, Double_divide);
+}
+
+/**
+ * Adds two given tensors and writes the results to a given
+ * destination tensor.
+ * 
+ * <p><b>Important:</b><br>
+ * This function only allows addition of two identically
+ * shaped tensors.
+ * </p>
+ * 
+ * @param *a            Pointer to the first summand tensor.
+ * @param *b            Pointer to the second summand tensor.
+ * @param *destination  Pointer to the destination tensor in which to write.
+ */
+void DoubleTensor_add(const DoubleTensor* a, const DoubleTensor* b,
+    const DoubleTensor* destination) {
+    (void)DoubleTensor_operate(a, b, destination, Double_add);
+}
+
+/**
+ * Subtracts two given tensors and writes the results to a given
+ * destination tensor.
+ * 
+ * <p><b>Important:</b><br>
+ * This function only allows subtraction of two identically
+ * shaped tensors.
+ * </p>
+ * 
+ * @param *a            Pointer to the minuend tensor.
+ * @param *b            Pointer to the subtrahend tensor.
+ * @param *destination  Pointer to the destination tensor in which to write.
+ */
+void DoubleTensor_subtract(const DoubleTensor* a, const DoubleTensor* b,
+    const DoubleTensor* destination) {
+    (void)DoubleTensor_operate(a, b, destination, Double_subtract);
+}
+
+/**
+ * Multiplies a given tensor by a given scalar and writes
+ * the results into a given destination tensor.
+ * 
+ * @param *a            Pointer to the tensor to multiply.
+ * @param *scalar       Scalar to multiply the tensor with.
+ * @param *destination  Pointer to the destination tensor in which to write.
+ */
+void DoubleTensor_scalarMultiply(const DoubleTensor* a, const double scalar,
+    const DoubleTensor* destination) {
+    (void)checkTensorCompatability(a->base, destination->base);
+
+    const double* data_a = a->tensor;
+    double* dest = destination->tensor;
+    const double* endPtr = data_a + a->base->dataPoints;
 
     while (data_a < endPtr) {
         *dest++ = scalar * (*data_a++);

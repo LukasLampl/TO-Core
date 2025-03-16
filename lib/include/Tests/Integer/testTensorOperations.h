@@ -29,6 +29,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "Operations/tensorOperations.h"
 
 void testTensorMultiply_001();
+void testTensorMultiply_002();
 void testTensorAdd_001();
 void testTensorDivide_001();
 void testTensorSubtract_001();

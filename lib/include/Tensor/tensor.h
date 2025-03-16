@@ -103,6 +103,8 @@ DoubleTensor* createDoubleTensor(const int dimensions, const int *shape);
 
 int *generateDimensionBasedCummulativeJumpTable(const Tensor* tensor);
 void IntegerTensor_print(const IntegerTensor* tensor);
+void FloatTensor_print(const FloatTensor* tensor);
+void DoubleTensor_print(const DoubleTensor* tensor);
 
 void freeIntegerTensor(IntegerTensor* tensor);
 void freeFloatTensor(FloatTensor* tensor);

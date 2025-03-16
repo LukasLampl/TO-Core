@@ -32,4 +32,16 @@ void IntegerTensor_add(const IntegerTensor* a, const IntegerTensor* b, const Int
 void IntegerTensor_subtract(const IntegerTensor* a, const IntegerTensor* b, const IntegerTensor* destination);
 void IntegerTensor_scalarMultiply(const IntegerTensor* a, const int scalar, const IntegerTensor* destination);
 
+void FloatTensor_multiply(const FloatTensor* a, const FloatTensor* b, const FloatTensor* destination);
+void FloatTensor_divide(const FloatTensor* a, const FloatTensor* b, const FloatTensor* destination);
+void FloatTensor_add(const FloatTensor* a, const FloatTensor* b, const FloatTensor* destination);
+void FloatTensor_subtract(const FloatTensor* a, const FloatTensor* b, const FloatTensor* destination);
+void FloatTensor_scalarMultiply(const FloatTensor* a, const float scalar, const FloatTensor* destination);
+
+void DoubleTensor_multiply(const DoubleTensor* a, const DoubleTensor* b, const DoubleTensor* destination);
+void DoubleTensor_divide(const DoubleTensor* a, const DoubleTensor* b, const DoubleTensor* destination);
+void DoubleTensor_add(const DoubleTensor* a, const DoubleTensor* b, const DoubleTensor* destination);
+void DoubleTensor_subtract(const DoubleTensor* a, const DoubleTensor* b, const DoubleTensor* destination);
+void DoubleTensor_scalarMultiply(const DoubleTensor* a, const double scalar, const DoubleTensor* destination);
+
 #endif
