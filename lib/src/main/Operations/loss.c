@@ -39,7 +39,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
  * @return The MSE between both tensors.
  */
 double IntegerTensor_MSE(const IntegerTensor* a, const IntegerTensor *b) {
-    (void)checkTensorCompatability(a, b);
+    (void)checkTensorCompatability(a->base, b->base, "MSE");
 
     double MSE = 0.0;
     const int* data_a = a->tensor;
@@ -67,7 +67,7 @@ double IntegerTensor_MSE(const IntegerTensor* a, const IntegerTensor *b) {
  * @return The SAD between both tensors.
  */
 double IntegerTensor_SAD(const IntegerTensor* a, const IntegerTensor *b) {
-    (void)checkTensorCompatability(a, b);
+    (void)checkTensorCompatability(a->base, b->base, "SAD");
 
     double SAD = 0.0;
     const int* data_a = a->tensor;
@@ -112,7 +112,7 @@ double IntegerTensor_MAD(const IntegerTensor* a, const IntegerTensor *b) {
  * @return The Huber Loss between both tensors.
  */
 double IntegerTensor_Huber_Loss(const IntegerTensor* a, const IntegerTensor *b, const int delta) {
-    (void)checkTensorCompatability(a, b);
+    (void)checkTensorCompatability(a->base, b->base, "Huber Loss");
 
     double loss = 0.0;
     const int halfDelta = delta >> 1;

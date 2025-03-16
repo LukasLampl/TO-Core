@@ -42,19 +42,19 @@ int main() {
     testTensorConvole1D_001();
     testTensorConvolve2D_001();
 
-    /*testTensorConvolve3D_001();
-    testTensorConvolve3D_002();*/
+    testTensorConvolve3D_001();
+    testTensorConvolve3D_002();
 
-    /*testTensorMSE_001();
+    testTensorMSE_001();
     testTensorSAD_001();
-    testTensorMAD_001();*/
+    testTensorMAD_001();
 
-    /*if (ENV_PROFILE_TESTING) {
+    if (ENV_PROFILE_TESTING) {
         profileTensorAdd_001();
         profileTensorDivide_001();
         profileTensorMultiply_001();
         profileTensorSubtract_001();
 
         profileTensorConvolve3D_001();
-    }*/
+    }
 }

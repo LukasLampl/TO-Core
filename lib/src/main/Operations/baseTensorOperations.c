@@ -19,7 +19,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "Tensor/tensor.h"
 #include "Error/exceptions.h"
@@ -74,20 +76,31 @@ int getElementIndex(const Tensor* tensor, const int* indices) {
  * Checks whether the dimensions of the given tensors match
  * and whether the shapes match as well.
  * 
- * @param *a    First tensor to check for compatability.
- * @param *b    Second tensor to check against the first.
+ * @param *a            First tensor to check for compatability.
+ * @param *b            Second tensor to check against the first.
+ * @param *operation    String with the operation type.
  * 
  * @throws IllegalArgumentException - When either the dimension does not match
  * or the shapes are different.
  */
-void checkTensorCompatability(const Tensor* a, const Tensor* b) {
+void checkTensorCompatability(const Tensor* a, const Tensor* b, const char *operation) {
     if (a->dimensions != b->dimensions) {
         (void)throwIllegalArgumentException("Can't operate on different shaped tensors!");
     }
 
     for (int i = 0; i < a->dimensions; i++) {
         if (a->shape[i] != b->shape[i]) {
-            (void)throwIllegalArgumentException("To perform multiplication the tensor shapes must be equal.");
+            const int size = 46 + (size_t)strlen(operation);
+            char *buffer = (char*)calloc(size, sizeof(char));
+
+            if (buffer != NULL) {
+                (void)snprintf(buffer, size, "To perform %s the tensor shapes must be equal.", operation);
+                (void)throwIllegalArgumentException(buffer);
+                (void)free(buffer);
+            } else {
+                (void)throwIllegalArgumentException("The tensor shapes must be equal.");
+            }
+            return;
         }
     }
 }
@@ -108,8 +121,8 @@ void checkTensorCompatability(const Tensor* a, const Tensor* b) {
  */
 void IntegerTensor_operate(const IntegerTensor* a, const IntegerTensor* b,
     const IntegerTensor* destination, const IntegerBinaryOperator operation) {
-    (void)checkTensorCompatability(a->base, b->base);
-    (void)checkTensorCompatability(a->base, destination->base);
+    (void)checkTensorCompatability(a->base, b->base, "binary operation");
+    (void)checkTensorCompatability(a->base, destination->base, "binary operation");
 
     const int* data_a = a->tensor;
     const int* data_b = b->tensor;
@@ -137,8 +150,8 @@ void IntegerTensor_operate(const IntegerTensor* a, const IntegerTensor* b,
  */
 void FloatTensor_operate(const FloatTensor* a, const FloatTensor* b,
     const FloatTensor* destination, const FloatBinaryOperator operation) {
-    (void)checkTensorCompatability(a->base, b->base);
-    (void)checkTensorCompatability(a->base, destination->base);
+    (void)checkTensorCompatability(a->base, b->base, "binary operation");
+    (void)checkTensorCompatability(a->base, destination->base, "binary operation");
 
     const float* data_a = a->tensor;
     const float* data_b = b->tensor;
@@ -166,8 +179,8 @@ void FloatTensor_operate(const FloatTensor* a, const FloatTensor* b,
  */
 void DoubleTensor_operate(const DoubleTensor* a, const DoubleTensor* b,
     const DoubleTensor* destination, const DoubleBinaryOperator operation) {
-    (void)checkTensorCompatability(a->base, b->base);
-    (void)checkTensorCompatability(a->base, destination->base);
+    (void)checkTensorCompatability(a->base, b->base, "binary operation");
+    (void)checkTensorCompatability(a->base, destination->base, "binary operation");
 
     const double* data_a = a->tensor;
     const double* data_b = b->tensor;
@@ -261,7 +274,7 @@ void IntegerTensor_subtract(const IntegerTensor* a, const IntegerTensor* b,
  */
 void IntegerTensor_scalarMultiply(const IntegerTensor* a, const int scalar,
     const IntegerTensor* destination) {
-    (void)checkTensorCompatability(a->base, destination->base);
+    (void)checkTensorCompatability(a->base, destination->base, "scalar multiply");
 
     const int* data_a = a->tensor;
     int* dest = destination->tensor;
@@ -354,7 +367,7 @@ void FloatTensor_subtract(const FloatTensor* a, const FloatTensor* b,
  */
 void FloatTensor_scalarMultiply(const FloatTensor* a, const float scalar,
     const FloatTensor* destination) {
-    (void)checkTensorCompatability(a->base, destination->base);
+    (void)checkTensorCompatability(a->base, destination->base, "scalar multiply");
 
     const float* data_a = a->tensor;
     float* dest = destination->tensor;
@@ -447,7 +460,7 @@ void DoubleTensor_subtract(const DoubleTensor* a, const DoubleTensor* b,
  */
 void DoubleTensor_scalarMultiply(const DoubleTensor* a, const double scalar,
     const DoubleTensor* destination) {
-    (void)checkTensorCompatability(a->base, destination->base);
+    (void)checkTensorCompatability(a->base, destination->base, "scalar multiply");
 
     const double* data_a = a->tensor;
     double* dest = destination->tensor;

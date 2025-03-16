@@ -2,6 +2,7 @@
     "files.associations": {
         "integertensoroperations.h": "c",
         "globals.h": "c",
-        "testsuite.h": "c"
+        "testsuite.h": "c",
+        "omp.h": "c"
     }
 }
