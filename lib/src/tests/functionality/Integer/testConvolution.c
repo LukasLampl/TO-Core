@@ -31,9 +31,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 void testTensorConvole1D_001() {
     int shape[] = {5};
     int kernelShape[] = {2};
-    IntegerTensor* t = createIntegerTensor(1, shape);
-    IntegerTensor* kernel = createIntegerTensor(1, kernelShape);
-    IntegerTensor* dest = createIntegerTensor(1, shape);
+    IntegerTensor* t = IntegerTensor_zeros(1, shape);
+    IntegerTensor* kernel = IntegerTensor_zeros(1, kernelShape);
+    IntegerTensor* dest = IntegerTensor_zeros(1, shape);
 
     t->tensor[0] = 5;
     t->tensor[1] = -4;
@@ -60,9 +60,9 @@ void testTensorConvole1D_001() {
 void testTensorConvole1D_002() {
     int shape[] = {5};
     int kernelShape[] = {2};
-    DoubleTensor* t = createDoubleTensor(1, shape);
-    DoubleTensor* kernel = createDoubleTensor(1, kernelShape);
-    DoubleTensor* dest = createDoubleTensor(1, shape);
+    DoubleTensor* t = DoubleTensor_zeros(1, shape);
+    DoubleTensor* kernel = DoubleTensor_zeros(1, kernelShape);
+    DoubleTensor* dest = DoubleTensor_zeros(1, shape);
 
     t->tensor[0] = 5.5;
     t->tensor[1] = -4.2;
@@ -89,9 +89,9 @@ void testTensorConvole1D_002() {
 void testTensorConvolve2D_001() {
     int shape[] = {3, 3};
     int kernelShape[] = {2, 2};
-    IntegerTensor* t = createIntegerTensor(2, shape);
-    IntegerTensor* kernel = createIntegerTensor(2, kernelShape);
-    IntegerTensor* dest = createIntegerTensor(2, shape);
+    IntegerTensor* t = IntegerTensor_zeros(2, shape);
+    IntegerTensor* kernel = IntegerTensor_zeros(2, kernelShape);
+    IntegerTensor* dest = IntegerTensor_zeros(2, shape);
 
     t->tensor[0] = 12;      t->tensor[1] = 5;       t->tensor[2] = -34;
     t->tensor[3] = 6;       t->tensor[4] = 12;      t->tensor[5] = -4;
@@ -117,9 +117,9 @@ void testTensorConvolve3D_001() {
     int shape[] = {2, 4, 4};
     int kernelShape[] = {2, 3, 3};
     int outputShape[] = {1, 2, 2};
-    IntegerTensor* t = createIntegerTensor(3, shape);
-    IntegerTensor* kernel = createIntegerTensor(3, kernelShape);
-    IntegerTensor* dest = createIntegerTensor(3, outputShape);
+    IntegerTensor* t = IntegerTensor_zeros(3, shape);
+    IntegerTensor* kernel = IntegerTensor_zeros(3, kernelShape);
+    IntegerTensor* dest = IntegerTensor_zeros(3, outputShape);
 
     t->tensor[0] = 12;       t->tensor[1] = 5;        t->tensor[2] = -34;      t->tensor[3] = 67;
     t->tensor[4] = -45;      t->tensor[5] = 1;        t->tensor[6] = -2;       t->tensor[7] = 7;
@@ -156,9 +156,9 @@ void testTensorConvolve3D_002() {
     int shape[] = {2, 4, 5};
     int kernelShape[] = {1, 3, 3};
     int outputShape[] = {2, 2, 3};
-    IntegerTensor* t = createIntegerTensor(3, shape);
-    IntegerTensor* kernel = createIntegerTensor(3, kernelShape);
-    IntegerTensor* dest = createIntegerTensor(3, outputShape);
+    IntegerTensor* t = IntegerTensor_zeros(3, shape);
+    IntegerTensor* kernel = IntegerTensor_zeros(3, kernelShape);
+    IntegerTensor* dest = IntegerTensor_zeros(3, outputShape);
 
     t->tensor[0] = 12;       t->tensor[1] = 5;        t->tensor[2] = -34;      t->tensor[3] = 67;       t->tensor[4] = -45;
     t->tensor[5] = 1;        t->tensor[6] = -2;       t->tensor[7] = 7;        t->tensor[8] = 34;       t->tensor[9] = 6;

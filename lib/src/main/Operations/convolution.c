@@ -25,12 +25,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define true 1
 #define false 0
 
-enum TensorType {
-    INTEGER,
-    FLOAT,
-    DOUBLE
-};
-
 /**
  * Calculates the dot product of a 1D stripe in a tensor with the given
  * kernel. This function will always use the last dimension as the measurement
@@ -324,23 +318,23 @@ double DoubleTensor_convolve_kernelDotProduct(const DoubleTensor* tensor,
  */
 void convolve_moveKernel(const void* tensorData, const void* kernelData, const void* destData,
     const Tensor* tensorBase, const Tensor* kernelBase, const Tensor* destBase,
-    const enum TensorType tensorType, const int dim,
+    const TensorType tensorType, const int dim,
     const int stride, const int tensorPtr,
     int* destPtr, const int* tensorDimJumpTable, const int* kernelJumpTable,
     const int highestDim) {
     if (dim >= tensorBase->dimensions) {
         switch (tensorType) {
-        case INTEGER:
+        case _TENSOR_TYPE_INTEGER_:
             (void)IntegerTensor_convolve_kernelDotProduct((const IntegerTensor*)tensorData,
                 (const IntegerTensor*)kernelData, (const IntegerTensor*)destData,
                 0, tensorPtr, 0, destPtr, tensorDimJumpTable, kernelJumpTable, true);
             break;
-        case FLOAT:
+        case _TENSOR_TYPE_FLOAT_:
             (void)FloatTensor_convolve_kernelDotProduct((const FloatTensor*)tensorData,
                 (const FloatTensor*)kernelData, (const FloatTensor*)destData,
                 0, tensorPtr, 0, destPtr, tensorDimJumpTable, kernelJumpTable, true);
             break;
-        case DOUBLE:
+        case _TENSOR_TYPE_DOUBLE_:
             (void)DoubleTensor_convolve_kernelDotProduct((const DoubleTensor*)tensorData,
                 (const DoubleTensor*)kernelData, (const DoubleTensor*)destData,
                 0, tensorPtr, 0, destPtr, tensorDimJumpTable, kernelJumpTable, true);
@@ -381,13 +375,13 @@ void convolve_moveKernel(const void* tensorData, const void* kernelData, const v
  * 
  * @return The tensor base of the given tensor.
  */
-Tensor* getTensorBaseByType(const void* tensor, const enum TensorType type) {
+Tensor* getTensorBaseByType(const void* tensor, const TensorType type) {
     switch (type) {
-    case INTEGER:
+    case _TENSOR_TYPE_INTEGER_:
         return ((IntegerTensor*)tensor)->base;
-    case FLOAT:
+    case _TENSOR_TYPE_FLOAT_:
         return ((FloatTensor*)tensor)->base;
-    case DOUBLE:
+    case _TENSOR_TYPE_DOUBLE_:
         return ((DoubleTensor*)tensor)->base;
     default:
         (void)throwIllegalArgumentException("Tensor type invalid for convolution!");
@@ -410,7 +404,7 @@ Tensor* getTensorBaseByType(const void* tensor, const enum TensorType type) {
  * @throw NullPointerException - When either the tensor, kernel or the destination is `NULL`.
  */
 void convolve(const void* tensor, const void* kernel, const void* dest,
-    const int stride, const enum TensorType tensorType) {
+    const int stride, const TensorType tensorType) {
     if (tensor == NULL || kernel == NULL || dest == NULL) {
         (void)throwNullPointerException("No tensor is allowed to be NULL at a convolution.");
         return;
@@ -453,7 +447,7 @@ void convolve(const void* tensor, const void* kernel, const void* dest,
  */
 void IntegerTensor_convolve(const IntegerTensor* tensor,
     const IntegerTensor* kernel, const IntegerTensor* dest, const int stride) {
-    (void)convolve(tensor, kernel, dest, stride, INTEGER);
+    (void)convolve(tensor, kernel, dest, stride, _TENSOR_TYPE_INTEGER_);
 }
 
 /**
@@ -470,7 +464,7 @@ void IntegerTensor_convolve(const IntegerTensor* tensor,
  */
 void FloatTensor_convolve(const FloatTensor* tensor,
     const FloatTensor* kernel, const FloatTensor* dest, const int stride) {
-    (void)convolve(tensor, kernel, dest, stride, FLOAT);
+    (void)convolve(tensor, kernel, dest, stride, _TENSOR_TYPE_FLOAT_);
 }
 
 /**
@@ -487,5 +481,5 @@ void FloatTensor_convolve(const FloatTensor* tensor,
  */
 void DoubleTensor_convolve(const DoubleTensor* tensor,
     const DoubleTensor* kernel, const DoubleTensor* dest, const int stride) {
-    (void)convolve(tensor, kernel, dest, stride, DOUBLE);
+    (void)convolve(tensor, kernel, dest, stride, _TENSOR_TYPE_DOUBLE_);
 }

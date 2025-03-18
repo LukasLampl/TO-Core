@@ -34,9 +34,9 @@ void profileTensorMultiply_001() {
     int shape[4] = {24, 1920, 1080, 3};
     int dimensions = 4;
 
-    IntegerTensor* tensor_a = createIntegerTensor(dimensions, shape);
-    IntegerTensor* tensor_b = createIntegerTensor(dimensions, shape);
-    IntegerTensor* tensor_c = createIntegerTensor(dimensions, shape);
+    IntegerTensor* tensor_a = IntegerTensor_zeros(dimensions, shape);
+    IntegerTensor* tensor_b = IntegerTensor_zeros(dimensions, shape);
+    IntegerTensor* tensor_c = IntegerTensor_zeros(dimensions, shape);
 
     for (int i = 0; i < N; i++) {
         tensor_a->tensor[i] = i;
@@ -71,9 +71,9 @@ void profileTensorAdd_001() {
     int shape[4] = {24, 1920, 1080, 3};
     int dimensions = 4;
 
-    IntegerTensor* tensor_a = createIntegerTensor(dimensions, shape);
-    IntegerTensor* tensor_b = createIntegerTensor(dimensions, shape);
-    IntegerTensor* tensor_c = createIntegerTensor(dimensions, shape);
+    IntegerTensor* tensor_a = IntegerTensor_zeros(dimensions, shape);
+    IntegerTensor* tensor_b = IntegerTensor_zeros(dimensions, shape);
+    IntegerTensor* tensor_c = IntegerTensor_zeros(dimensions, shape);
 
     for (int i = 0; i < N; i++) {
         tensor_a->tensor[i] = i;
@@ -108,9 +108,9 @@ void profileTensorDivide_001() {
     int shape[4] = {24, 1920, 1080, 3};
     int dimensions = 4;
 
-    IntegerTensor* tensor_a = createIntegerTensor(dimensions, shape);
-    IntegerTensor* tensor_b = createIntegerTensor(dimensions, shape);
-    IntegerTensor* tensor_c = createIntegerTensor(dimensions, shape);
+    IntegerTensor* tensor_a = IntegerTensor_zeros(dimensions, shape);
+    IntegerTensor* tensor_b = IntegerTensor_zeros(dimensions, shape);
+    IntegerTensor* tensor_c = IntegerTensor_zeros(dimensions, shape);
 
     for (int i = 0; i < N; i++) {
         tensor_a->tensor[i] = i;
@@ -145,9 +145,9 @@ void profileTensorSubtract_001() {
     int shape[4] = {24, 1920, 1080, 3};
     int dimensions = 4;
 
-    IntegerTensor* tensor_a = createIntegerTensor(dimensions, shape);
-    IntegerTensor* tensor_b = createIntegerTensor(dimensions, shape);
-    IntegerTensor* tensor_c = createIntegerTensor(dimensions, shape);
+    IntegerTensor* tensor_a = IntegerTensor_zeros(dimensions, shape);
+    IntegerTensor* tensor_b = IntegerTensor_zeros(dimensions, shape);
+    IntegerTensor* tensor_c = IntegerTensor_zeros(dimensions, shape);
 
     for (int i = 0; i < N; i++) {
         tensor_a->tensor[i] = i;

@@ -29,8 +29,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 void testTensorMSE_001() {
     int shape[] = {5};
-    IntegerTensor* t_1 = createIntegerTensor(1, shape);
-    IntegerTensor* t_2 = createIntegerTensor(1, shape);
+    IntegerTensor* t_1 = IntegerTensor_zeros(1, shape);
+    IntegerTensor* t_2 = IntegerTensor_zeros(1, shape);
 
     t_1->tensor[0] = 0;
     t_1->tensor[1] = 1;
@@ -50,8 +50,8 @@ void testTensorMSE_001() {
 
 void testTensorSAD_001() {
     int shape[] = {5};
-    IntegerTensor* t_1 = createIntegerTensor(1, shape);
-    IntegerTensor* t_2 = createIntegerTensor(1, shape);
+    IntegerTensor* t_1 = IntegerTensor_zeros(1, shape);
+    IntegerTensor* t_2 = IntegerTensor_zeros(1, shape);
 
     t_1->tensor[0] = 0;
     t_1->tensor[1] = 1;
@@ -71,8 +71,8 @@ void testTensorSAD_001() {
 
 void testTensorMAD_001() {
     int shape[] = {5};
-    IntegerTensor* t_1 = createIntegerTensor(1, shape);
-    IntegerTensor* t_2 = createIntegerTensor(1, shape);
+    IntegerTensor* t_1 = IntegerTensor_zeros(1, shape);
+    IntegerTensor* t_2 = IntegerTensor_zeros(1, shape);
 
     t_1->tensor[0] = 0;
     t_1->tensor[1] = 1;

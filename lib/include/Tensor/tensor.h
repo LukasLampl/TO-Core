@@ -24,6 +24,12 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <stdlib.h>
 
+typedef enum TensorType {
+    _TENSOR_TYPE_INTEGER_,
+    _TENSOR_TYPE_FLOAT_,
+    _TENSOR_TYPE_DOUBLE_
+} TensorType;
+
 /**
  * The base of all tensor subtypes with the datatypes
  * all tensors need to identify. It contains the following
@@ -97,9 +103,13 @@ typedef struct {
     double *tensor;
 } DoubleTensor;
 
-IntegerTensor* createIntegerTensor(const int dimensions, const int *shape);
-FloatTensor* createFloatTensor(const int dimensions, const int *shape);
-DoubleTensor* createDoubleTensor(const int dimensions, const int *shape);
+IntegerTensor* IntegerTensor_zeros(const int dimensions, const int *shape);
+FloatTensor* FloatTensor_zeros(const int dimensions, const int *shape);
+DoubleTensor* DoubleTensor_zeros(const int dimensions, const int *shape);
+
+IntegerTensor* IntegerTensor_ones(const int dimensions, const int *shape);
+FloatTensor* FloatTensor_ones(const int dimensions, const int *shape);
+DoubleTensor* DoubleTensor_ones(const int dimensions, const int *shape);
 
 int *generateDimensionBasedCummulativeJumpTable(const Tensor* tensor);
 void IntegerTensor_print(const IntegerTensor* tensor);

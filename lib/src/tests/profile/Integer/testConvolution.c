@@ -33,9 +33,9 @@ void profileTensorConvolve3D_001() {
     int shape[] = {3, 1920, 1080};
     int kernelShape[] = {3, 3, 3};
     int outputShape[] = {1, 1920, 1080};
-    IntegerTensor* t = createIntegerTensor(3, shape);
-    IntegerTensor* kernel = createIntegerTensor(3, kernelShape);
-    IntegerTensor* dest = createIntegerTensor(3, outputShape);
+    IntegerTensor* t = IntegerTensor_zeros(3, shape);
+    IntegerTensor* kernel = IntegerTensor_zeros(3, kernelShape);
+    IntegerTensor* dest = IntegerTensor_zeros(3, outputShape);
 
     printf("\nPreparing conolution 3D of %ld elements.\n", t->base->dataPoints);
 
