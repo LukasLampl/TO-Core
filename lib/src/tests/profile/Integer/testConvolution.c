@@ -48,7 +48,7 @@ void profileTensorConvolve3D_001() {
     }
 
     clock_t start = clock();
-    IntegerTensor_convolve(t, kernel, dest, 1);
+    IntegerTensor_convolve(t, kernel, dest, 3);
     clock_t end = clock();
 
     printf(" > Time: %f seconds\n", ((double)(end - start) / (double)CLOCKS_PER_SEC));
@@ -59,5 +59,6 @@ void profileTensorConvolve3D_001() {
         sum += dest->tensor[i];
     }
 
+    testSuite_assertEquals(shape[0] * shape[1] * shape[2], sum);
     printf(" > Sum: %ld\n", sum);
 }

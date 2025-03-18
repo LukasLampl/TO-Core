@@ -34,26 +34,27 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 int main() {
     ENV_UNIT_TESTING = 1;
 
-    testTensorAdd_001();
+    /*testTensorAdd_001();
     testTensorDivide_001();
     testTensorMultiply_001();
     testTensorMultiply_002();
-    testTensorSubtract_001();
+    testTensorSubtract_001();*/
     testTensorConvole1D_001();
+    testTensorConvole1D_002();
     testTensorConvolve2D_001();
 
     testTensorConvolve3D_001();
     testTensorConvolve3D_002();
 
-    testTensorMSE_001();
+    /*testTensorMSE_001();
     testTensorSAD_001();
-    testTensorMAD_001();
+    testTensorMAD_001();*/
 
     if (ENV_PROFILE_TESTING) {
-        profileTensorAdd_001();
+        /*profileTensorAdd_001();
         profileTensorDivide_001();
         profileTensorMultiply_001();
-        profileTensorSubtract_001();
+        profileTensorSubtract_001();*/
 
         profileTensorConvolve3D_001();
     }

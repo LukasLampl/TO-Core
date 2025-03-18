@@ -25,16 +25,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define true 1
 #define false 0
 
+enum TensorType {
+    INTEGER,
+    FLOAT,
+    DOUBLE
+};
+
 /**
  * Calculates the dot product of a 1D stripe in a tensor with the given
  * kernel. This function will always use the last dimension as the measurement
  * of the "width" of the tensor and kernel.
- * 
- * <p><b>Caution:</b><br>
- * This function does not check for valid parameters, if this is needed,
- * please refer to #IntegerTensor_dotProduct_1D(IntegerTensor* tensor,
- *  IntegerTensor* kernel, int tensorOffset, int kernelOffset).
- * </p>
  * 
  * @param *tensor       The tensor from which to get the dot product.
  * @param *kernel       The kernel that should be used as the multiplicant.
@@ -71,18 +71,48 @@ int IntegerTensor_dotProduct1D(const IntegerTensor* tensor,
  * 
  * @return The dot product of the tensor and the kernel with the set offset.
  */
-int IntegerTensor_dotProduct_1D(const IntegerTensor* tensor,
-    const IntegerTensor* kernel, const int tensorOffset,
+float FloatTensor_dotProduct1D(const FloatTensor* tensor,
+    const FloatTensor* kernel, const int tensorOffset,
     const int kernelOffset) {
-    if (tensor == NULL || kernel == NULL) {
-        (void)throwNullPointerException("For dot product the kernel and tensor must not be NULL!");
-        return 0;
-    } else if (tensorOffset < 0 || kernelOffset < 0) {
-        (void)throwIllegalArgumentException("Offset must be a positive integer.");
-        return 0;
+    const int kernelWidth = kernel->base->shape[kernel->base->dimensions - 1];
+    float dotProduct = 0;
+
+    for (int kx = 0; kx < kernelWidth; kx++) {
+        const float t_val = tensorOffset + kx >= tensor->base->dataPoints ?
+                            0 : tensor->tensor[tensorOffset + kx];
+        const float k_val = kernel->tensor[kernelOffset + kx];
+        dotProduct += t_val * k_val;
     }
 
-    return IntegerTensor_dotProduct1D(tensor, kernel, tensorOffset, kernelOffset);
+    return dotProduct;
+}
+
+/**
+ * Calculates the dot product of a 1D stripe in a tensor with the given
+ * kernel. This function will always use the last dimension as the measurement
+ * of the "width" of the tensor and kernel.
+ * 
+ * @param *tensor       The tensor from which to get the dot product.
+ * @param *kernel       The kernel that should be used as the multiplicant.
+ * @param tensorOffset  Offset of the tensor at which to start getting the dot product.
+ * @param kernelOffset  Offset of the kernels values that function as the multiplicants.
+ * 
+ * @return The dot product of the tensor and the kernel with the set offset.
+ */
+double DoubleTensor_dotProduct1D(const DoubleTensor* tensor,
+    const DoubleTensor* kernel, const int tensorOffset,
+    const int kernelOffset) {
+    const int kernelWidth = kernel->base->shape[kernel->base->dimensions - 1];
+    double dotProduct = 0;
+
+    for (int kx = 0; kx < kernelWidth; kx++) {
+        const double t_val = tensorOffset + kx >= tensor->base->dataPoints ?
+                            0 : tensor->tensor[tensorOffset + kx];
+        const double k_val = kernel->tensor[kernelOffset + kx];
+        dotProduct += t_val * k_val;
+    }
+
+    return dotProduct;
 }
 
 /**
@@ -105,17 +135,17 @@ int IntegerTensor_dotProduct_1D(const IntegerTensor* tensor,
  * @param dim                       The current dimension.
  * @param tensorPtr                 Index to the data start in the tensor.
  * @param kernelPtr                 Index to the kernel start.
- * @param highesternelDimension     Whether the call is from the highest dimension or not.
  * @param *destPtr                  Pointer to the destination index.
  * @param *tensorDimJumpTable       Cummulative jump table with the entries of the offsets of each tensor dimension.
  * @param *kernelJumpTable          Cummulative jump table with the entries of the offsets of each kernel dimension.
+ * @param highesternelDimension     Whether the call is from the highest dimension or not.
  * 
  * @return The dot product of the current dimension.
  */
 int IntegerTensor_convolve_kernelDotProduct(const IntegerTensor* tensor,
     const IntegerTensor* kernel, const IntegerTensor* dest, const int dim,
-    const int tensorPtr, const int kernelPtr, const int highestKernelDimension,
-    int* destPtr, const int* tensorDimJumpTable, const int* kernelJumpTable) {
+    const int tensorPtr, const int kernelPtr, int* destPtr,
+    const int* tensorDimJumpTable, const int* kernelJumpTable, const int highestKernelDimension) {
     int dotProduct = 0;
 
     if (dim + 1 >= kernel->base->dimensions) {
@@ -137,7 +167,124 @@ int IntegerTensor_convolve_kernelDotProduct(const IntegerTensor* tensor,
         int newTensorPtr = i * t_off + tensorPtr;
 
         dotProduct += (int)IntegerTensor_convolve_kernelDotProduct(tensor,
-            kernel, dest, dim + 1, newTensorPtr, newKernelPtr, false, destPtr, tensorDimJumpTable, kernelJumpTable);
+            kernel, dest, dim + 1, newTensorPtr, newKernelPtr, destPtr,
+            tensorDimJumpTable, kernelJumpTable, false);
+    }
+
+    if (highestKernelDimension == true) {
+        dest->tensor[(*destPtr)++] = dotProduct;
+    }
+
+    return dotProduct;
+}
+
+/**
+ * Recursively gets the dot product of a N-Dimensional kernel and writes the
+ * result to the given destination tensor.
+ * 
+ * @param *tensor                   Tensor that should be convolved.
+ * @param *kernel                   The kernel that should be used for the convolution.
+ * @param *dest                     Destination tensor in which to write the dot products.
+ * @param dim                       The current dimension.
+ * @param tensorPtr                 Index to the data start in the tensor.
+ * @param kernelPtr                 Index to the kernel start.
+ * @param *destPtr                  Pointer to the destination index.
+ * @param *tensorDimJumpTable       Cummulative jump table with the entries of the offsets of each tensor dimension.
+ * @param *kernelJumpTable          Cummulative jump table with the entries of the offsets of each kernel dimension.
+ * @param highesternelDimension     Whether the call is from the highest dimension or not.
+ * 
+ * @return The dot product of the current dimension.
+ * 
+ * @see #IntegerTensor_convolve_kernelDotProduct(const IntegerTensor* tensor,
+    const IntegerTensor* kernel, const IntegerTensor* dest, const int dim,
+    const int tensorPtr, const int kernelPtr, int* destPtr,
+    const int* tensorDimJumpTable, const int* kernelJumpTable, const int highestKernelDimension)
+ */
+float FloatTensor_convolve_kernelDotProduct(const FloatTensor* tensor,
+    const FloatTensor* kernel, const FloatTensor* dest, const int dim,
+    const int tensorPtr, const int kernelPtr, int* destPtr,
+    const int* tensorDimJumpTable, const int* kernelJumpTable, const int highestKernelDimension) {
+    float dotProduct = 0;
+
+    if (dim + 1 >= kernel->base->dimensions) {
+        dotProduct = (float)FloatTensor_dotProduct1D(tensor, kernel, tensorPtr, kernelPtr);
+
+        if (highestKernelDimension == true) {
+            dest->tensor[(*destPtr)++] = dotProduct;
+        }
+
+        return dotProduct;
+    }
+
+    const int k_size = kernel->base->shape[dim];
+    const int k_off = kernelJumpTable[dim];
+    const int t_off = tensorDimJumpTable[dim];
+    
+    for (int i = 0; i < k_size; i++) {
+        int newKernelPtr = i * k_off + kernelPtr;
+        int newTensorPtr = i * t_off + tensorPtr;
+
+        dotProduct += (float)FloatTensor_convolve_kernelDotProduct(tensor,
+            kernel, dest, dim + 1, newTensorPtr, newKernelPtr, destPtr,
+            tensorDimJumpTable, kernelJumpTable, false);
+    }
+
+    if (highestKernelDimension == true) {
+        dest->tensor[(*destPtr)++] = dotProduct;
+    }
+
+    return dotProduct;
+}
+
+/**
+ * Recursively gets the dot product of a N-Dimensional kernel and writes the
+ * result to the given destination tensor.
+ * 
+ * @param *tensor                   Tensor that should be convolved.
+ * @param *kernel                   The kernel that should be used for the convolution.
+ * @param *dest                     Destination tensor in which to write the dot products.
+ * @param dim                       The current dimension.
+ * @param tensorPtr                 Index to the data start in the tensor.
+ * @param kernelPtr                 Index to the kernel start.
+ * @param *destPtr                  Pointer to the destination index.
+ * @param *tensorDimJumpTable       Cummulative jump table with the entries of the offsets of each tensor dimension.
+ * @param *kernelJumpTable          Cummulative jump table with the entries of the offsets of each kernel dimension.
+ * @param highesternelDimension     Whether the call is from the highest dimension or not.
+ * 
+ * @return The dot product of the current dimension.
+ * 
+ * @see #IntegerTensor_convolve_kernelDotProduct(const IntegerTensor* tensor,
+    const IntegerTensor* kernel, const IntegerTensor* dest, const int dim,
+    const int tensorPtr, const int kernelPtr, int* destPtr,
+    const int* tensorDimJumpTable, const int* kernelJumpTable, const int highestKernelDimension)
+ */
+double DoubleTensor_convolve_kernelDotProduct(const DoubleTensor* tensor,
+    const DoubleTensor* kernel, const DoubleTensor* dest, const int dim,
+    const int tensorPtr, const int kernelPtr, int* destPtr,
+    const int* tensorDimJumpTable, const int* kernelJumpTable, const int highestKernelDimension) {
+    double dotProduct = 0;
+
+    if (dim + 1 >= kernel->base->dimensions) {
+        dotProduct = (double)DoubleTensor_dotProduct1D(tensor, kernel, tensorPtr, kernelPtr);
+
+        if (highestKernelDimension == true) {
+            dest->tensor[(*destPtr)++] = dotProduct;
+        }
+
+        return dotProduct;
+    }
+
+    const int k_size = kernel->base->shape[dim];
+    const int k_off = kernelJumpTable[dim];
+    const int t_off = tensorDimJumpTable[dim];
+    
+    for (int i = 0; i < k_size; i++) {
+        int newKernelPtr = i * k_off + kernelPtr;
+        int newTensorPtr = i * t_off + tensorPtr;
+
+        dotProduct += (double)DoubleTensor_convolve_kernelDotProduct(tensor,
+            kernel, dest, dim + 1, newTensorPtr, newKernelPtr, destPtr,
+            tensorDimJumpTable, kernelJumpTable, false);
     }
 
     if (highestKernelDimension == true) {
@@ -158,32 +305,54 @@ int IntegerTensor_convolve_kernelDotProduct(const IntegerTensor* tensor,
  * the function reaches the first dimension.
  * </p>
  * 
- * @param *tensor                   Tensor that should be convolved.
- * @param *kernel                   The kernel that should be used for the convolution.
- * @param *dest                     Destination tensor in which to write the dot products.
- * @param dim                       The current dimension.
- * @param stride                    Stride at which the kernel moves.
- * @param tensorPtr                 Index to the data start in the tensor.
- * @param highestDim                Whether the call is from the highest dimension or not.
- * @param *destPtr                  Pointer to the destination index.
- * @param *tensorDimJumpTable       Cummulative jump table with the entries of the offsets of each tensor dimension.
- * @param *kernelJumpTable          Cummulative jump table with the entries of the offsets of each kernel dimension.
+ * @param *tensorData           The actual tensor. (IntegerTensor, FloatTensor, DoubleTensor)
+ * @param *kernelData           The actual kernel.
+ * @param *destData             The actual destination tensor.
+ * @param *tensorBase           The metadata of the tensor.
+ * @param *kernelBase           The metadata of the kernel.
+ * @param *destBase             The metadata of the destination tensor.
+ * @param tensorType            Determines the types of the tensors used for convolution. (INTEGER, FLOAT, DOUBLE)
+ * @param dim                   The current dimension of the recursion. (Depth of the recursion)
+ * @param stride                Stride of the kernel.
+ * @param tensorPtr             Index of the current tensor index at the current dimension and position of the kernel.
+ * @param *destPtr              Pointer to the destination index.
+ * @param *tensorDimJumpTable   Jump table where at a given index `i` the number of elements to skip, till the next dim is present (for tensor).
+ * @param *kernelJumpTable      Jump table where at a given index `i` the number of elements to skip, till the next dim is present (for kernel).
+ * @param highestDim            Whether the recursion is in the highest dimension or not.
  * 
  * @throw IllegalArgumentException - When the destination size at the dimension is to small.
  */
-void IntegerTensor_convolve_moveKernel(const IntegerTensor* tensor,
-    const IntegerTensor* kernel, const IntegerTensor* dest, const int dim,
-    const int stride, const int tensorPtr, const int highestDim,
-    int* destPtr, const int* tensorDimJumpTable, const int* kernelJumpTable) {
-    if (dim >= tensor->base->dimensions) {
-        (void)IntegerTensor_convolve_kernelDotProduct(tensor, kernel,
-                dest, 0, tensorPtr, 0, true, destPtr, tensorDimJumpTable, kernelJumpTable);
+void convolve_moveKernel(const void* tensorData, const void* kernelData, const void* destData,
+    const Tensor* tensorBase, const Tensor* kernelBase, const Tensor* destBase,
+    const enum TensorType tensorType, const int dim,
+    const int stride, const int tensorPtr,
+    int* destPtr, const int* tensorDimJumpTable, const int* kernelJumpTable,
+    const int highestDim) {
+    if (dim >= tensorBase->dimensions) {
+        switch (tensorType) {
+        case INTEGER:
+            (void)IntegerTensor_convolve_kernelDotProduct((const IntegerTensor*)tensorData,
+                (const IntegerTensor*)kernelData, (const IntegerTensor*)destData,
+                0, tensorPtr, 0, destPtr, tensorDimJumpTable, kernelJumpTable, true);
+            break;
+        case FLOAT:
+            (void)FloatTensor_convolve_kernelDotProduct((const FloatTensor*)tensorData,
+                (const FloatTensor*)kernelData, (const FloatTensor*)destData,
+                0, tensorPtr, 0, destPtr, tensorDimJumpTable, kernelJumpTable, true);
+            break;
+        case DOUBLE:
+            (void)DoubleTensor_convolve_kernelDotProduct((const DoubleTensor*)tensorData,
+                (const DoubleTensor*)kernelData, (const DoubleTensor*)destData,
+                0, tensorPtr, 0, destPtr, tensorDimJumpTable, kernelJumpTable, true);
+            break;
+        }
+        
         return;
     }
 
-    const int t_size = tensor->base->shape[dim];
-    const int k_size = kernel->base->shape[dim];
-    const int d_size = dest->base->shape[dim];
+    const int t_size = tensorBase->shape[dim];
+    const int k_size = kernelBase->shape[dim];
+    const int d_size = destBase->shape[dim];
     const int tensorDimOff = tensorDimJumpTable[dim];
     const int min_dest_size = (t_size - k_size) / stride + 1;
     const int nextDim = dim + 1;
@@ -194,13 +363,80 @@ void IntegerTensor_convolve_moveKernel(const IntegerTensor* tensor,
     }
 
     for (int i = 0; (i + k_size) <= t_size; i += stride) {
-        int innerTensorPtr = nextDim >= tensor->base->dimensions ?
+        int innerTensorPtr = nextDim >= tensorBase->dimensions ?
                             tensorPtr + i
                             : i * tensorDimOff + tensorPtr;
-        (void)IntegerTensor_convolve_moveKernel(tensor,
-            kernel, dest, nextDim, stride, innerTensorPtr,
-            false, destPtr, tensorDimJumpTable, kernelJumpTable);
+        (void)convolve_moveKernel(tensorData, kernelData, destData,
+            tensorBase, kernelBase, destBase, tensorType,
+            nextDim, stride, innerTensorPtr,
+            destPtr, tensorDimJumpTable, kernelJumpTable, false);
     }
+}
+
+/**
+ * Gets the base of a given tensor.
+ * 
+ * @param type      Type of the tensor.
+ * @param *tensor   The generic tensor from which to get the base.
+ * 
+ * @return The tensor base of the given tensor.
+ */
+Tensor* getTensorBaseByType(const void* tensor, const enum TensorType type) {
+    switch (type) {
+    case INTEGER:
+        return ((IntegerTensor*)tensor)->base;
+    case FLOAT:
+        return ((FloatTensor*)tensor)->base;
+    case DOUBLE:
+        return ((DoubleTensor*)tensor)->base;
+    default:
+        (void)throwIllegalArgumentException("Tensor type invalid for convolution!");
+    }
+
+    return NULL;
+}
+
+/**
+ * Executes a N-Dimensional convolution on a given tensor and kernel.
+ * 
+ * @param *tensor       Tensor to convolve.
+ * @param *kernel       Kernel to use.
+ * @param *dest         Destination tensor in which to write the results.
+ * @param stride        Stride of the kernel.
+ * @param tensorType    Datatype type of the tensor data (INTEGER, FLOAT, DOUBLE)
+ * 
+ * @throw IllegalArgumentException - When the dimensions of the tensor and kernel mismatch.
+ * @throw IllegalArgumentException - When the destination size at the dimension is to small.
+ * @throw NullPointerException - When either the tensor, kernel or the destination is `NULL`.
+ */
+void convolve(const void* tensor, const void* kernel, const void* dest,
+    const int stride, const enum TensorType tensorType) {
+    if (tensor == NULL || kernel == NULL || dest == NULL) {
+        (void)throwNullPointerException("No tensor is allowed to be NULL at a convolution.");
+        return;
+    }
+
+    const Tensor* tensorBase = (Tensor*)getTensorBaseByType(tensor, tensorType);
+    const Tensor* kernelBase = (Tensor*)getTensorBaseByType(kernel, tensorType);
+    const Tensor* destBase = (Tensor*)getTensorBaseByType(dest, tensorType);
+
+    if (tensorBase->dimensions != kernelBase->dimensions) {
+        (void)throwIllegalArgumentException("Convolution is only allowed for equal dimensional tensors.");
+        return;
+    }
+
+    int destPtr = 0;
+    int* tensorJumpTable = (int*)generateDimensionBasedCummulativeJumpTable(tensorBase);
+    int* kernelJumpTable = (int*)generateDimensionBasedCummulativeJumpTable(kernelBase);
+
+    if (tensorJumpTable != NULL && kernelJumpTable != NULL) {
+        (void)convolve_moveKernel(tensor, kernel, dest, tensorBase, kernelBase,
+            destBase, tensorType, 0, stride, 0, &destPtr,
+            tensorJumpTable, kernelJumpTable, true);
+    }
+    
+    if (tensorJumpTable != NULL) (void)free(tensorJumpTable);
+    if (kernelJumpTable != NULL) (void)free(kernelJumpTable);
 }
 
 /**
@@ -217,26 +453,39 @@ void IntegerTensor_convolve_moveKernel(const IntegerTensor* tensor,
  */
 void IntegerTensor_convolve(const IntegerTensor* tensor,
     const IntegerTensor* kernel, const IntegerTensor* dest, const int stride) {
-    if (tensor == NULL || kernel == NULL || dest == NULL) {
-        (void)throwNullPointerException("No tensor is allowed to be NULL at a convolution.");
-        return;
-    } else if (tensor->base->dimensions != kernel->base->dimensions) {
-        (void)throwIllegalArgumentException("Convolution is only allowed for equal dimensional tensors.");
-        return;
-    }
+    (void)convolve(tensor, kernel, dest, stride, INTEGER);
+}
 
-    int destPtr = 0;
-    int* tensorJumpTable = (int*)generateDimensionBasedCummulativeJumpTable(tensor->base);
-    int* kernelJumpTable = (int*)generateDimensionBasedCummulativeJumpTable(kernel->base);
+/**
+ * Executes a N-Dimensional convolution on a given tensor and kernel.
+ * 
+ * @param *tensor   Tensor to convolve.
+ * @param *kernel   Kernel to use.
+ * @param *dest     Destination tensor in which to write the results.
+ * @param stride    Stride of the kernel.
+ * 
+ * @throw IllegalArgumentException - When the dimensions of the tensor and kernel mismatch.
+ * @throw IllegalArgumentException - When the destination size at the dimension is to small.
+ * @throw NullPointerException - When either the tensor, kernel or the destination is `NULL`.
+ */
+void FloatTensor_convolve(const FloatTensor* tensor,
+    const FloatTensor* kernel, const FloatTensor* dest, const int stride) {
+    (void)convolve(tensor, kernel, dest, stride, FLOAT);
+}
 
-    if (tensorJumpTable == NULL || kernelJumpTable == NULL) {
-        (void)free(tensorJumpTable);
-        (void)free(kernelJumpTable);
-        return;
-    }
-
-    (void)IntegerTensor_convolve_moveKernel(tensor, kernel, dest,
-        0, stride, 0, true, &destPtr, tensorJumpTable, kernelJumpTable);
-    (void)free(tensorJumpTable);
-    (void)free(kernelJumpTable);
+/**
+ * Executes a N-Dimensional convolution on a given tensor and kernel.
+ * 
+ * @param *tensor   Tensor to convolve.
+ * @param *kernel   Kernel to use.
+ * @param *dest     Destination tensor in which to write the results.
+ * @param stride    Stride of the kernel.
+ * 
+ * @throw IllegalArgumentException - When the dimensions of the tensor and kernel mismatch.
+ * @throw IllegalArgumentException - When the destination size at the dimension is to small.
+ * @throw NullPointerException - When either the tensor, kernel or the destination is `NULL`.
+ */
+void DoubleTensor_convolve(const DoubleTensor* tensor,
+    const DoubleTensor* kernel, const DoubleTensor* dest, const int stride) {
+    (void)convolve(tensor, kernel, dest, stride, DOUBLE);
 }

@@ -40,6 +40,7 @@ void profileTensorDivide_001();
 void profileTensorSubtract_001();
 
 void testTensorConvole1D_001();
+void testTensorConvole1D_002();
 void testTensorConvolve2D_001();
 void testTensorConvolve3D_001();
 void testTensorConvolve3D_002();

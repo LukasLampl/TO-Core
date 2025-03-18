@@ -50,6 +50,40 @@ void testTensorConvole1D_001() {
     printf("=======================\n");
     IntegerTensor_print(dest);
     printf("\n");
+
+    testSuite_assertEquals(83, dest->tensor[0]);
+    testSuite_assertEquals(-743, dest->tensor[1]);
+    testSuite_assertEquals(418, dest->tensor[2]);
+    testSuite_assertEquals(-51, dest->tensor[3]);
+}
+
+void testTensorConvole1D_002() {
+    int shape[] = {5};
+    int kernelShape[] = {2};
+    DoubleTensor* t = createDoubleTensor(1, shape);
+    DoubleTensor* kernel = createDoubleTensor(1, kernelShape);
+    DoubleTensor* dest = createDoubleTensor(1, shape);
+
+    t->tensor[0] = 5.5;
+    t->tensor[1] = -4.2;
+    t->tensor[2] = 0.0;
+    t->tensor[3] = 67.3;
+    t->tensor[4] = 89.4;
+
+    kernel->tensor[0] = 3.141;
+    kernel->tensor[1] = -12.6;
+
+    DoubleTensor_convolve(t, kernel, dest, 1);
+
+    printf("\nConvolution 1D\n");
+    printf("=======================\n");
+    DoubleTensor_print(dest);
+    printf("\n");
+
+    testSuite_assertEquals(70.1955, dest->tensor[0]);
+    testSuite_assertEquals(-13.1922, dest->tensor[1]);
+    testSuite_assertEquals(-847.98, dest->tensor[2]);
+    testSuite_assertEquals(-915.0507, dest->tensor[3]);
 }
 
 void testTensorConvolve2D_001() {
@@ -72,6 +106,11 @@ void testTensorConvolve2D_001() {
     printf("=======================\n");
     IntegerTensor_print(dest);
     printf("\n");
+
+    testSuite_assertEquals(-4, dest->tensor[0]);
+    testSuite_assertEquals(162, dest->tensor[1]);
+    testSuite_assertEquals(-401, dest->tensor[2]);
+    testSuite_assertEquals(-438, dest->tensor[3]);
 }
 
 void testTensorConvolve3D_001() {
@@ -106,6 +145,11 @@ void testTensorConvolve3D_001() {
     printf("=======================\n");
     IntegerTensor_print(dest);
     printf("\n");
+
+    testSuite_assertEquals(5975, dest->tensor[0]);
+    testSuite_assertEquals(615, dest->tensor[1]);
+    testSuite_assertEquals(-4858, dest->tensor[2]);
+    testSuite_assertEquals(993, dest->tensor[3]);
 }
 
 void testTensorConvolve3D_002() {
@@ -136,4 +180,17 @@ void testTensorConvolve3D_002() {
     printf("=======================\n");
     IntegerTensor_print(dest);
     printf("\n");
+
+    testSuite_assertEquals(-598, dest->tensor[0]);
+    testSuite_assertEquals(1476, dest->tensor[1]);
+    testSuite_assertEquals(216, dest->tensor[2]);
+    testSuite_assertEquals(-1633, dest->tensor[3]);
+    testSuite_assertEquals(-648, dest->tensor[4]);
+    testSuite_assertEquals(2596, dest->tensor[5]);
+    testSuite_assertEquals(30, dest->tensor[6]);
+    testSuite_assertEquals(-1099, dest->tensor[7]);
+    testSuite_assertEquals(759, dest->tensor[8]);
+    testSuite_assertEquals(1124, dest->tensor[9]);
+    testSuite_assertEquals(604, dest->tensor[10]);
+    testSuite_assertEquals(1382, dest->tensor[11]);
 }
