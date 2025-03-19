@@ -21,6 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "Error/exceptions.h"
 #include "Tensor/tensor.h"
+#include "Operations/convolution.h"
 
 #define true 1
 #define false 0
@@ -365,29 +366,6 @@ void convolve_moveKernel(const void* tensorData, const void* kernelData, const v
             nextDim, stride, innerTensorPtr,
             destPtr, tensorDimJumpTable, kernelJumpTable, false);
     }
-}
-
-/**
- * Gets the base of a given tensor.
- * 
- * @param type      Type of the tensor.
- * @param *tensor   The generic tensor from which to get the base.
- * 
- * @return The tensor base of the given tensor.
- */
-Tensor* getTensorBaseByType(const void* tensor, const TensorType type) {
-    switch (type) {
-    case _TENSOR_TYPE_INTEGER_:
-        return ((IntegerTensor*)tensor)->base;
-    case _TENSOR_TYPE_FLOAT_:
-        return ((FloatTensor*)tensor)->base;
-    case _TENSOR_TYPE_DOUBLE_:
-        return ((DoubleTensor*)tensor)->base;
-    default:
-        (void)throwIllegalArgumentException("Tensor type invalid for convolution!");
-    }
-
-    return NULL;
 }
 
 /**

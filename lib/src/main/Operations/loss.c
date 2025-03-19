@@ -21,10 +21,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <stdlib.h>
 
-#include "Operations/tensorOperations.h"
 #include "Tensor/tensor.h"
+#include "Operations/baseOperations.h"
+#include "Operations/loss.h"
 #include "Error/exceptions.h"
-#include "math.h"
+#include "mathUtils.h"
 
 /**
  * Calculates the MSE (= Mean Square Error) between two given tensors.

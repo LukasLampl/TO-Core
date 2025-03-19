@@ -103,6 +103,10 @@ typedef struct {
     double *tensor;
 } DoubleTensor;
 
+void freeIntegerTensor(IntegerTensor* tensor);
+void freeFloatTensor(FloatTensor* tensor);
+void freeDoubleTensor(DoubleTensor* tensor);
+
 IntegerTensor* IntegerTensor_zeros(const int dimensions, const int *shape);
 FloatTensor* FloatTensor_zeros(const int dimensions, const int *shape);
 DoubleTensor* DoubleTensor_zeros(const int dimensions, const int *shape);
@@ -116,8 +120,6 @@ void IntegerTensor_print(const IntegerTensor* tensor);
 void FloatTensor_print(const FloatTensor* tensor);
 void DoubleTensor_print(const DoubleTensor* tensor);
 
-void freeIntegerTensor(IntegerTensor* tensor);
-void freeFloatTensor(FloatTensor* tensor);
-void freeDoubleTensor(DoubleTensor* tensor);
+Tensor* getTensorBaseByType(const void* tensor, const TensorType type);
 
 #endif

@@ -3,6 +3,9 @@
         "integertensoroperations.h": "c",
         "globals.h": "c",
         "testsuite.h": "c",
-        "omp.h": "c"
+        "omp.h": "c",
+        "tensor.h": "c",
+        "advancedoperations.h": "c",
+        "math.h": "c"
     }
 }

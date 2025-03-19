@@ -24,6 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <string.h>
 
 #include "Tensor/tensor.h"
+#include "Operations/baseOperations.h"
 #include "Error/exceptions.h"
 
 typedef int (*IntegerBinaryOperator)(int, int);

@@ -538,3 +538,26 @@ void DoubleTensor_print(const DoubleTensor* tensor) {
     (void)printTensor(tensor->tensor, tensor->base, 0, 0, jumpTable, DOUBLE);
     (void)free(jumpTable);
 }
+
+/**
+ * Gets the base of a given tensor.
+ * 
+ * @param type      Type of the tensor.
+ * @param *tensor   The generic tensor from which to get the base.
+ * 
+ * @return The tensor base of the given tensor.
+ */
+Tensor* getTensorBaseByType(const void* tensor, const TensorType type) {
+    switch (type) {
+    case _TENSOR_TYPE_INTEGER_:
+        return ((IntegerTensor*)tensor)->base;
+    case _TENSOR_TYPE_FLOAT_:
+        return ((FloatTensor*)tensor)->base;
+    case _TENSOR_TYPE_DOUBLE_:
+        return ((DoubleTensor*)tensor)->base;
+    default:
+        (void)throwIllegalArgumentException("Tensor type invalid for convolution!");
+    }
+
+    return NULL;
+}

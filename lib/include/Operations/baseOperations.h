@@ -19,8 +19,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef TENSOR_OPERATIONS_H
-#define TENSOR_OPERATIONS_H
+#ifndef BASE_OPERATIONS_H
+#define BASE_OPERATIONS_H
 
 #include "Tensor/tensor.h"
 

@@ -19,49 +19,42 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
+#ifndef TEST_INTEGER_TENSOR_OPERATIONS_H
+#define TEST_INTEGER_TENSOR_OPERATIONS_H
 
-#include "testSuite.h"
-#include "globals.h"
+#include <stdio.h>
+#include <stdlib.h>
+
 #include "Tensor/tensor.h"
 #include "Operations/baseOperations.h"
-#include "Operations/convolution.h"
 
-#include "Tests/testTensorOperations.h"
+void testTensorMultiply_001();
+void testTensorMultiply_002();
+void testTensorAdd_001();
+void testTensorDivide_001();
+void testTensorSubtract_001();
 
-int main() {
-    ENV_UNIT_TESTING = 1;
+void testTensorMean_001();
+void testTensorMean_002();
 
-    /*testTensorAdd_001();
-    testTensorDivide_001();
-    testTensorMultiply_001();
-    testTensorMultiply_002();
-    testTensorSubtract_001();
-    testTensorConvole1D_001();
-    testTensorConvole1D_002();
-    testTensorConvolve2D_001();
+void testTensorStdDev_001();
+void testTensorStdDev_002();
 
-    testTensorConvolve3D_001();
-    testTensorConvolve3D_002();
+void profileTensorMultiply_001();
+void profileTensorAdd_001();
+void profileTensorDivide_001();
+void profileTensorSubtract_001();
 
-    testTensorMSE_001();
-    testTensorSAD_001();
-    testTensorMAD_001();*/
+void testTensorConvole1D_001();
+void testTensorConvole1D_002();
+void testTensorConvolve2D_001();
+void testTensorConvolve3D_001();
+void testTensorConvolve3D_002();
 
-    testTensorMean_001();
-    testTensorMean_002();
+void profileTensorConvolve3D_001();
 
-    testTensorStdDev_001();
-    testTensorStdDev_002();
+void testTensorMSE_001();
+void testTensorSAD_001();
+void testTensorMAD_001();
 
-    if (ENV_PROFILE_TESTING) {
-        /*profileTensorAdd_001();
-        profileTensorDivide_001();
-        profileTensorMultiply_001();
-        profileTensorSubtract_001();
-        
-        profileTensorConvolve3D_001();*/
-    }
-}
+#endif

@@ -23,9 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <stdlib.h>
 #include <time.h>
 
-#include "Tests/Integer/testTensorOperations.h"
+#include "Tests/testTensorOperations.h"
 #include "Tensor/tensor.h"
-#include "Operations/tensorOperations.h"
+#include "Operations/baseOperations.h"
 
 #include "testSuite.h"
 

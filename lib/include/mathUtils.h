@@ -19,36 +19,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef TEST_INTEGER_TENSOR_OPERATIONS_H
-#define TEST_INTEGER_TENSOR_OPERATIONS_H
+#ifndef MATH_UTILS_H
+#define MATH_UTILS_H
 
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "Tensor/tensor.h"
-#include "Operations/tensorOperations.h"
-
-void testTensorMultiply_001();
-void testTensorMultiply_002();
-void testTensorAdd_001();
-void testTensorDivide_001();
-void testTensorSubtract_001();
-
-void profileTensorMultiply_001();
-void profileTensorAdd_001();
-void profileTensorDivide_001();
-void profileTensorSubtract_001();
-
-void testTensorConvole1D_001();
-void testTensorConvole1D_002();
-void testTensorConvolve2D_001();
-void testTensorConvolve3D_001();
-void testTensorConvolve3D_002();
-
-void profileTensorConvolve3D_001();
-
-void testTensorMSE_001();
-void testTensorSAD_001();
-void testTensorMAD_001();
+int int_abs(const int number);
 
 #endif
