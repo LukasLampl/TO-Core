@@ -25,8 +25,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "Tests/testTensorOperations.h"
 #include "Tensor/tensor.h"
 #include "Operations/baseOperations.h"
-#include "Operations/standardDeviation.h"
-#include "Operations/mean.h"
+#include "Operations/statistics.h"
 
 #include "testSuite.h"
 
