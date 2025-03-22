@@ -19,18 +19,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef ADV_OPERATIONS_H
-#define ADV_OPERATIONS_H
+#ifndef MEAN_H
+#define MEAN_H
 
 #include "Tensor/tensor.h"
-
 
 double IntegerTensor_getMean(const IntegerTensor* tensor);
 double FloatTensor_getMean(const FloatTensor* tensor);
 double DoubleTensor_getMean(const DoubleTensor* tensor);
-
-double IntegerTensor_getStandardDeviation(const IntegerTensor* tensor);
-double FloatTensor_getStandardDeviation(const FloatTensor* tensor);
-double DoubleTensor_getStandardDeviation(const DoubleTensor* tensor);
 
 #endif

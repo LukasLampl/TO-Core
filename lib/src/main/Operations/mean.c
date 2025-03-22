@@ -19,10 +19,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <math.h>
-
 #include "Tensor/tensor.h"
-#include "Operations/advancedOperations.h"
 #include "Error/exceptions.h"
 
 /**
@@ -136,7 +133,7 @@ double FloatTensor_getMean(const FloatTensor* tensor) {
 }
 
 /**
- * Calculates the mean of an DoubleTensor.
+ * Calculates the mean of a DoubleTensor.
  * 
  * @param *tensor   Tensor for which to calculate the mean.
  * 
@@ -144,86 +141,4 @@ double FloatTensor_getMean(const FloatTensor* tensor) {
  */
 double DoubleTensor_getMean(const DoubleTensor* tensor) {
     return (double)getMeanValue(tensor, _TENSOR_TYPE_DOUBLE_);
-}
-
-/**
- * Calculates the standard deviation of a given tensor.
- * 
- * @param *tensor       Tensor for which to calculate the standard deviation.
- * @param tensorType    Type of the given tensor.
- * 
- * @return The calculated standard deviation of the given tensor.
- */
-double getStandardDeviation(const void* tensor, const TensorType tensorType) {
-    double mean = (double)getMeanValue(tensor, tensorType);
-    size_t dataPoints = ((Tensor*)getTensorBaseByType(tensor, tensorType))->dataPoints;
-    double sum = 0.0;
-
-    switch (tensorType) {
-    case _TENSOR_TYPE_INTEGER_: {
-        int* start = ((IntegerTensor*)tensor)->tensor;
-        const int* end = start + dataPoints;
-
-        while (start < end) {
-            double delta = *start++ - mean;
-            sum += delta * delta;
-        }
-        break;
-    }
-    case _TENSOR_TYPE_FLOAT_: {
-        float* start = ((FloatTensor*)tensor)->tensor;
-        const float* end = start + dataPoints;
-
-        while (start < end) {
-            double delta = *start++ - mean;
-            sum += delta * delta;
-        }
-        break;
-    }
-    case _TENSOR_TYPE_DOUBLE_: {
-        double* start = ((DoubleTensor*)tensor)->tensor;
-        const double* end = start + dataPoints;
-
-        while (start < end) {
-            double delta = *start++ - mean;
-            sum += delta * delta;
-        }
-        break;
-    }
-    }
-
-    return (double)sqrt(sum / (double)dataPoints);
-}
-
-/**
- * Calculates the standard deviation of an IntegerTensor.
- * 
- * @param *tensor   Tensor for which to calculate the standard deviation.
- * 
- * @return The standard deviation of the given tensor.
- */
-double IntegerTensor_getStandardDeviation(const IntegerTensor* tensor) {
-   return (double)getStandardDeviation(tensor, _TENSOR_TYPE_INTEGER_);
-}
-
-/**
- * Calculates the standard deviation of a FloatTensor.
- * 
- * @param *tensor   Tensor for which to calculate the standard deviation.
- * 
- * @return The standard deviation of the given tensor.
- */
-double FloatTensor_getStandardDeviation(const FloatTensor* tensor) {
-    return (double)getStandardDeviation(tensor, _TENSOR_TYPE_FLOAT_);
-}
-
-/**
- * Calculates the standard deviation of a DoubleTensor.
- * 
- * @param *tensor   Tensor for which to calculate the standard deviation.
- * 
- * @return The standard deviation of the given tensor.
- */
-double DoubleTensor_getStandardDeviation(const DoubleTensor* tensor) {
-    return (double)getStandardDeviation(tensor, _TENSOR_TYPE_DOUBLE_);
 }
