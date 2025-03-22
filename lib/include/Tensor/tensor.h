@@ -107,6 +107,8 @@ void freeIntegerTensor(IntegerTensor* tensor);
 void freeFloatTensor(FloatTensor* tensor);
 void freeDoubleTensor(DoubleTensor* tensor);
 
+size_t countNumberOfDataIndexes(const int dimensions, const int *shape);
+
 IntegerTensor* IntegerTensor_zeros(const int dimensions, const int *shape);
 FloatTensor* FloatTensor_zeros(const int dimensions, const int *shape);
 DoubleTensor* DoubleTensor_zeros(const int dimensions, const int *shape);

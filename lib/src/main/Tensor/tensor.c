@@ -133,7 +133,7 @@ void checkDimensionAndShape(const int dimensions, const int *shape) {
  * 
  * @return The number of datapoints / data elements.
  */
-int countNumberOfDataIndexes(const int dimensions, const int *shape) {
+size_t countNumberOfDataIndexes(const int dimensions, const int *shape) {
     int numberOfDataIndexes = 1;
 
     for (int i = 0; i < dimensions; i++) {
@@ -153,7 +153,7 @@ int countNumberOfDataIndexes(const int dimensions, const int *shape) {
  */
 Tensor* createTensorBase(const int dimensions, const int *shape) {
     (void)checkDimensionAndShape(dimensions, shape);
-    const int numberOfDataIndexes = (int)countNumberOfDataIndexes(dimensions, shape);
+    const size_t numberOfDataIndexes = (size_t)countNumberOfDataIndexes(dimensions, shape);
 
     Tensor* tensor = (Tensor*)calloc(1, sizeof(Tensor));
     int* shape_copy = (int*)malloc(dimensions * sizeof(int));
