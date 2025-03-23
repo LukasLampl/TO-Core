@@ -22,6 +22,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
+#include <stdint.h>
 
 #include "Tensor/tensor.h"
 #include "Error/exceptions.h"
@@ -117,10 +119,18 @@ void checkDimensionAndShape(const int dimensions, const int *shape) {
         (void)throwNullPointerException("Shape must not be NULL!");
     }
 
+    size_t size = 1;
+
     for (int i = 0; i < dimensions; i++) {
         if (shape[i] <= 0) {
             (void)throwIllegalArgumentException("Shape values must be positive integers!");
         }
+
+        size *= shape[i];
+    }
+
+    if (size >= SIZE_MAX) {
+        (void)throwIllegalArgumentException("Tensor is too large!");
     }
 }
 

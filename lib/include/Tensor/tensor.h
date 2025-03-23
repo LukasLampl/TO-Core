@@ -23,6 +23,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define TENSOR_H
 
 #include <stdlib.h>
+#include <stdint.h>
 
 typedef enum TensorType {
     _TENSOR_TYPE_INTEGER_,

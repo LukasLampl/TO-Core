@@ -19,52 +19,36 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef TEST_INTEGER_TENSOR_OPERATIONS_H
-#define TEST_INTEGER_TENSOR_OPERATIONS_H
-
-#include <stdio.h>
-#include <stdlib.h>
-
+#include "testSuite.h"
+#include "Operations/utils.h"
 #include "Tensor/tensor.h"
-#include "Operations/baseOperations.h"
 
-void testTensorMultiply_001();
-void testTensorMultiply_002();
-void testTensorAdd_001();
-void testTensorDivide_001();
-void testTensorSubtract_001();
+#include "Tests/testTensorOperations.h"
 
-void testTensorMean_001();
-void testTensorMean_002();
+void testTensorArgMin_001() {
+    int shape[] = {2, 3};
+    IntegerTensor* tensor = IntegerTensor_zeros(2, shape);
 
-void testTensorStdDev_001();
-void testTensorStdDev_002();
+    for (int i = 0; i < tensor->base->dataPoints; i++) {
+        tensor->tensor[i] = tensor->base->dataPoints - i;
+    }
 
-void profileTensorMultiply_001();
-void profileTensorAdd_001();
-void profileTensorDivide_001();
-void profileTensorSubtract_001();
+    size_t minIndex = IntegerTensor_argMin(tensor);
+    printf("Min index: %ld\n", minIndex);
 
+    testSuite_assertEquals(tensor->base->dataPoints - 1, minIndex);
+}
 
+void testTensorArgMax_001() {
+    int shape[] = {2, 3};
+    IntegerTensor* tensor = IntegerTensor_zeros(2, shape);
 
-void testTensorConvole1D_001();
-void testTensorConvole1D_002();
-void testTensorConvolve2D_001();
-void testTensorConvolve3D_001();
-void testTensorConvolve3D_002();
+    for (int i = 0; i < tensor->base->dataPoints; i++) {
+        tensor->tensor[i] = tensor->base->dataPoints - i;
+    }
 
-void profileTensorConvolve3D_001();
+    size_t minIndex = IntegerTensor_argMax(tensor);
+    printf("Max index: %ld\n", minIndex);
 
-
-
-void testTensorMSE_001();
-void testTensorSAD_001();
-void testTensorMAD_001();
-
-
-
-void testTensorArgMin_001();
-
-void testTensorArgMax_001();
-
-#endif
+    testSuite_assertEquals(0, minIndex);
+}

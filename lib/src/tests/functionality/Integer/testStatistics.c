@@ -19,50 +19,41 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <time.h>
-
 #include "testSuite.h"
-#include "globals.h"
+#include "Operations/statistics.h"
 #include "Tensor/tensor.h"
 
 #include "Tests/testTensorOperations.h"
 
-int main() {
-    ENV_UNIT_TESTING = 1;
+void testTensorMean_001() {
+    int shape[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    IntegerTensor* t = IntegerTensor_ones(10, shape);
+    double mean = IntegerTensor_getMean(t);
+    testSuite_assertEquals(1, mean);
+}
 
-    /*testTensorAdd_001();
-    testTensorDivide_001();
-    testTensorMultiply_001();
-    testTensorMultiply_002();
-    testTensorSubtract_001();
-    testTensorConvole1D_001();
-    testTensorConvole1D_002();
-    testTensorConvolve2D_001();
+void testTensorMean_002() {
+    int shape[] = {12, 42, 8};
+    IntegerTensor* t = IntegerTensor_zeros(3, shape);
+    double mean = IntegerTensor_getMean(t);
+    testSuite_assertEquals(0, mean);
+}
 
-    testTensorConvolve3D_001();
-    testTensorConvolve3D_002();
+void testTensorStdDev_001() {
+    int shape[] = {12, 42, 8};
+    IntegerTensor* t = IntegerTensor_zeros(3, shape);
+    double stdDev = IntegerTensor_getStandardDeviation(t);
+    testSuite_assertEquals(0, stdDev);
+}
 
-    testTensorMSE_001();
-    testTensorSAD_001();
-    testTensorMAD_001();*/
+void testTensorStdDev_002() {
+    int shape[] = {3, 2, 2};
+    IntegerTensor* t = IntegerTensor_zeros(3, shape);
 
-    /*testTensorMean_001();
-    testTensorMean_002();
-
-    testTensorStdDev_001();
-    testTensorStdDev_002();*/
-
-    testTensorArgMin_001();
-    testTensorArgMax_001();
-
-    if (ENV_PROFILE_TESTING) {
-        /*profileTensorAdd_001();
-        profileTensorDivide_001();
-        profileTensorMultiply_001();
-        profileTensorSubtract_001();
-        
-        profileTensorConvolve3D_001();*/
+    for (int i = 0; i < t->base->dataPoints; i++) {
+        t->tensor[i] = i;
     }
+
+    double stdDev = IntegerTensor_getStandardDeviation(t);
+    testSuite_assertEquals(3.4520525, stdDev);
 }

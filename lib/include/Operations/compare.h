@@ -19,52 +19,22 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef TEST_INTEGER_TENSOR_OPERATIONS_H
-#define TEST_INTEGER_TENSOR_OPERATIONS_H
-
-#include <stdio.h>
-#include <stdlib.h>
+#ifndef COMPARE_H
+#define COMPARE_H
 
 #include "Tensor/tensor.h"
-#include "Operations/baseOperations.h"
 
-void testTensorMultiply_001();
-void testTensorMultiply_002();
-void testTensorAdd_001();
-void testTensorDivide_001();
-void testTensorSubtract_001();
+typedef int (*Integer_SearchFunction)(int, int);
+typedef int (*Float_SearchFunction)(float, float);
+typedef int (*Double_SearchFunction)(double, double);
 
-void testTensorMean_001();
-void testTensorMean_002();
+int Integer_isMin(int a, int b);
+int Integer_isMax(int a, int b);
 
-void testTensorStdDev_001();
-void testTensorStdDev_002();
+int Float_isMin(float a, float b);
+int Float_isMax(float a, float b);
 
-void profileTensorMultiply_001();
-void profileTensorAdd_001();
-void profileTensorDivide_001();
-void profileTensorSubtract_001();
-
-
-
-void testTensorConvole1D_001();
-void testTensorConvole1D_002();
-void testTensorConvolve2D_001();
-void testTensorConvolve3D_001();
-void testTensorConvolve3D_002();
-
-void profileTensorConvolve3D_001();
-
-
-
-void testTensorMSE_001();
-void testTensorSAD_001();
-void testTensorMAD_001();
-
-
-
-void testTensorArgMin_001();
-
-void testTensorArgMax_001();
+int Double_isMin(double a, double b);
+int Double_isMax(double a, double b);
 
 #endif

@@ -22,11 +22,10 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "Tests/testTensorOperations.h"
 #include "Tensor/tensor.h"
 #include "Operations/baseOperations.h"
-#include "Operations/statistics.h"
 
+#include "Tests/testTensorOperations.h"
 #include "testSuite.h"
 
 void testTensorMultiply_001() {
@@ -152,37 +151,4 @@ void testTensorSubtract_001() {
     freeIntegerTensor(tensor_a);
     freeIntegerTensor(tensor_b);
     freeIntegerTensor(tensor_c);
-}
-
-void testTensorMean_001() {
-    int shape[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-    IntegerTensor* t = IntegerTensor_ones(10, shape);
-    double mean = IntegerTensor_getMean(t);
-    testSuite_assertEquals(1, mean);
-}
-
-void testTensorMean_002() {
-    int shape[] = {12, 42, 8};
-    IntegerTensor* t = IntegerTensor_zeros(3, shape);
-    double mean = IntegerTensor_getMean(t);
-    testSuite_assertEquals(0, mean);
-}
-
-void testTensorStdDev_001() {
-    int shape[] = {12, 42, 8};
-    IntegerTensor* t = IntegerTensor_zeros(3, shape);
-    double stdDev = IntegerTensor_getStandardDeviation(t);
-    testSuite_assertEquals(0, stdDev);
-}
-
-void testTensorStdDev_002() {
-    int shape[] = {3, 2, 2};
-    IntegerTensor* t = IntegerTensor_zeros(3, shape);
-
-    for (int i = 0; i < t->base->dataPoints; i++) {
-        t->tensor[i] = i;
-    }
-
-    double stdDev = IntegerTensor_getStandardDeviation(t);
-    testSuite_assertEquals(3.4520525, stdDev);
 }

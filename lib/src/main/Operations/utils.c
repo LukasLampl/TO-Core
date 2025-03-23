@@ -20,10 +20,16 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
 #include <string.h>
+#include <limits.h>
+#include <stdint.h>
 
 #include "Tensor/tensor.h"
 #include "Operations/utils.h"
+#include "Operations/compare.h"
 #include "Error/exceptions.h"
+
+#define true 1
+#define false 0
 
 /**
  * Flattens a given tensor, by resolving the shape and
@@ -141,4 +147,238 @@ void FloatTensor_reshape(const FloatTensor* tensor, const int* shape, const int 
  */
 void DoubleTensor_reshape(const DoubleTensor* tensor, const int* shape, const int dimensions) {
     (void)reshape(tensor->base, shape, dimensions);
+}
+
+/**
+ * Executes a search over the whole tensor using the given search function and
+ * returns the index, at which the search function had its peak.
+ * 
+ * <p><b>Note:</b><br>
+ * If you wan to add a new SearchFunction, please refer to "Operations/compare.h".
+ * Just remember, that the output of the SearchFunction must always be `true` or `1`,
+ * when the searching operator is valid. For instance: `Integer_isMin(int, int)`
+ * returns only `true`, when the first arg is smaller than the second.
+ * </p>
+ * 
+ * @param *tensor           Tensor in which to search.
+ * @param searchFunction    The search function to apply.
+ * 
+ * @return
+ * <ul>
+ * <li>The index at which the search function had its peak.
+ * <li>`SIZE_MAX` when an error occured.
+ * </ul>
+ */
+size_t IntegerTensor_argSearch(const IntegerTensor* tensor, const Integer_SearchFunction searchFunction) {
+    if (tensor == NULL) {
+        (void)throwNullPointerException("Tensor must not be NULL.");
+        return SIZE_MAX;
+    }
+
+    size_t index = 0;
+    size_t currentIndex = 0;
+    int peak = (int)tensor->tensor[0];
+
+    int* start = tensor->tensor;
+    const int* end = start + tensor->base->dataPoints;
+
+    while (start < end) {
+        const int num = *start;
+
+        if ((int)searchFunction(num, peak) == true) {
+            peak = num;
+            index = currentIndex;
+        }
+
+        start++;
+        currentIndex++;
+    }
+
+    return index;
+}
+
+/**
+ * Executes a search over the whole tensor using the given search function and
+ * returns the index, at which the search function had its peak.
+ * 
+ * <p><b>Note:</b><br>
+ * If you wan to add a new SearchFunction, please refer to "Operations/compare.h".
+ * Just remember, that the output of the SearchFunction must always be `true` or `1`,
+ * when the searching operator is valid. For instance: `Integer_isMin(int, int)`
+ * returns only `true`, when the first arg is smaller than the second.
+ * </p>
+ * 
+ * @param *tensor           Tensor in which to search.
+ * @param searchFunction    The search function to apply.
+ * 
+ * @return
+ * <ul>
+ * <li>The index at which the search function had its peak.
+ * <li>`SIZE_MAX` when an error occured.
+ * </ul>
+ */
+size_t FloatTensor_argSearch(const FloatTensor* tensor, const Float_SearchFunction searchFunction) {
+    if (tensor == NULL) {
+        (void)throwNullPointerException("Tensor must not be NULL.");
+        return SIZE_MAX;
+    }
+
+    size_t index = 0;
+    size_t currentIndex = 0;
+    float peak = (float)tensor->tensor[0];
+
+    float* start = tensor->tensor;
+    const float* end = start + tensor->base->dataPoints;
+
+    while (start < end) {
+        const float num = *start;
+
+        if ((float)searchFunction(num, peak) == true) {
+            peak = num;
+            index = currentIndex;
+        }
+
+        start++;
+        currentIndex++;
+    }
+
+    return index;
+}
+
+/**
+ * Executes a search over the whole tensor using the given search function and
+ * returns the index, at which the search function had its peak.
+ * 
+ * <p><b>Note:</b><br>
+ * If you wan to add a new SearchFunction, please refer to "Operations/compare.h".
+ * Just remember, that the output of the SearchFunction must always be `true` or `1`,
+ * when the searching operator is valid. For instance: `Integer_isMin(int, int)`
+ * returns only `true`, when the first arg is smaller than the second.
+ * </p>
+ * 
+ * @param *tensor           Tensor in which to search.
+ * @param searchFunction    The search function to apply.
+ * 
+ * @return
+ * <ul>
+ * <li>The index at which the search function had its peak.
+ * <li>`SIZE_MAX` when an error occured.
+ * </ul>
+ */
+size_t DoubleTensor_argSearch(const DoubleTensor* tensor, const Double_SearchFunction searchFunction) {
+    if (tensor == NULL) {
+        (void)throwNullPointerException("Tensor must not be NULL.");
+        return SIZE_MAX;
+    }
+
+    size_t index = 0;
+    size_t currentIndex = 0;
+    double peak = (double)tensor->tensor[0];
+
+    double* start = tensor->tensor;
+    const double* end = start + tensor->base->dataPoints;
+
+    while (start < end) {
+        const double num = *start;
+
+        if ((double)searchFunction(num, peak) == true) {
+            peak = num;
+            index = currentIndex;
+        }
+
+        start++;
+        currentIndex++;
+    }
+
+    return index;
+}
+
+/**
+ * Returns the index where the tensor's smallest value lies.
+ * 
+ * @param *tensor   Tensor in which to search.
+ * 
+ * @return
+ * <ul>
+ * <li>The index of the smallest value in the tensor.
+ * <li>`SIZE_MAX` when an error occured.
+ * </ul>
+ */
+size_t IntegerTensor_argMin(const IntegerTensor* tensor) {
+    return (size_t)IntegerTensor_argSearch(tensor, Integer_isMin);
+}
+
+/**
+ * Returns the index where the tensor's greatest value lies.
+ * 
+ * @param *tensor   Tensor in which to search.
+ * 
+ * @return
+ * <ul>
+ * <li>The index of the greatest value in the tensor.
+ * <li>`SIZE_MAX` when an error occured.
+ * </ul>
+ */
+size_t IntegerTensor_argMax(const IntegerTensor* tensor) {
+    return (size_t)IntegerTensor_argSearch(tensor, Integer_isMax);
+}
+
+/**
+ * Returns the index where the tensor's smallest value lies.
+ * 
+ * @param *tensor   Tensor in which to search.
+ * 
+ * @return
+ * <ul>
+ * <li>The index of the smallest value in the tensor.
+ * <li>`SIZE_MAX` when an error occured.
+ * </ul>
+ */
+size_t FloatTensor_argMin(const FloatTensor* tensor) {
+    return (size_t)FloatTensor_argSearch(tensor, Float_isMin);
+}
+
+/**
+ * Returns the index where the tensor's greatest value lies.
+ * 
+ * @param *tensor   Tensor in which to search.
+ * 
+ * @return
+ * <ul>
+ * <li>The index of the greatest value in the tensor.
+ * <li>`SIZE_MAX` when an error occured.
+ * </ul>
+ */
+size_t FloatTensor_argMax(const FloatTensor* tensor) {
+    return (size_t)FloatTensor_argSearch(tensor, Float_isMax);
+}
+
+/**
+ * Returns the index where the tensor's smallest value lies.
+ * 
+ * @param *tensor   Tensor in which to search.
+ * 
+ * @return
+ * <ul>
+ * <li>The index of the smallest value in the tensor.
+ * <li>`SIZE_MAX` when an error occured.
+ * </ul>
+ */
+size_t DoubleTensor_argMin(const DoubleTensor* tensor) {
+    return (size_t)DoubleTensor_argSearch(tensor, Double_isMin);
+}
+
+/**
+ * Returns the index where the tensor's greatest value lies.
+ * 
+ * @param *tensor   Tensor in which to search.
+ * 
+ * @return
+ * <ul>
+ * <li>The index of the greatest value in the tensor.
+ * <li>`SIZE_MAX` when an error occured.
+ * </ul>
+ */
+size_t DoubleTensor_argMax(const DoubleTensor* tensor) {
+    return (size_t)DoubleTensor_argSearch(tensor, Double_isMax);
 }

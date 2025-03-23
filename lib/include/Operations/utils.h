@@ -22,7 +22,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <stdlib.h>
+#include <stdint.h>
+
 #include "Tensor/tensor.h"
+#include "Operations/compare.h"
 
 void IntegerTensor_flatten(const IntegerTensor* tensor);
 void FloatTensor_flatten(const FloatTensor* tensor);
@@ -31,5 +35,17 @@ void DoubleTensor_flatten(const DoubleTensor* tensor);
 void IntegerTensor_reshape(const IntegerTensor* tensor, const int* shape, const int dimensions);
 void FloatTensor_reshape(const FloatTensor* tensor, const int* shape, const int dimensions);
 void DoubleTensor_reshape(const DoubleTensor* tensor, const int* shape, const int dimensions);
+
+size_t IntegerTensor_argSearch(const IntegerTensor* tensor, const Integer_SearchFunction searchFunction);
+size_t IntegerTensor_argMin(const IntegerTensor* tensor);
+size_t IntegerTensor_argMax(const IntegerTensor* tensor);
+
+size_t FloatTensor_argSearch(const FloatTensor* tensor, const Float_SearchFunction searchFunction);
+size_t FloatTensor_argMin(const FloatTensor* tensor);
+size_t FloatTensor_argMax(const FloatTensor* tensor);
+
+size_t DoubleTensor_argSearch(const DoubleTensor* tensor, const Double_SearchFunction searchFunction);
+size_t DoubleTensor_argMin(const DoubleTensor* tensor);
+size_t DoubleTensor_argMax(const DoubleTensor* tensor);
 
 #endif
