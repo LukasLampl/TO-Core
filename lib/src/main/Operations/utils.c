@@ -24,6 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include <stdint.h>
 
 #include "Tensor/tensor.h"
+#include "Operations/baseOperations.h"
 #include "Operations/utils.h"
 #include "Operations/compare.h"
 #include "Error/exceptions.h"
@@ -381,4 +382,130 @@ size_t DoubleTensor_argMin(const DoubleTensor* tensor) {
  */
 size_t DoubleTensor_argMax(const DoubleTensor* tensor) {
     return (size_t)DoubleTensor_argSearch(tensor, Double_isMax);
+}
+
+/**
+ * Clamps a given value.
+ * 
+ * @param value     The value to clamp.
+ * @param min       Minimum the value should have.
+ * @param max       Maximum the value should have.
+ * 
+ * @return
+ * <ul>
+ * <li>`value` - When `min` < `value` < `max`.
+ * <li>`min` - When `min` >= `value`.
+ * <li>`max` - When `max` <= `value`.
+ * </ul>
+ */
+int Integer_clamp(const int value, const int min, const int max) {
+    return value >= max ? max : value <= min ? min : value;
+}
+
+/**
+ * Clamps a given value.
+ * 
+ * @param value     The value to clamp.
+ * @param min       Minimum the value should have.
+ * @param max       Maximum the value should have.
+ * 
+ * @return
+ * <ul>
+ * <li>`value` - When `min` < `value` < `max`.
+ * <li>`min` - When `min` >= `value`.
+ * <li>`max` - When `max` <= `value`.
+ * </ul>
+ */
+float Float_clamp(const float value, const float min, const float max) {
+    return value >= max ? max : value <= min ? min : value;
+}
+
+/**
+ * Clamps a given value.
+ * 
+ * @param value     The value to clamp.
+ * @param min       Minimum the value should have.
+ * @param max       Maximum the value should have.
+ * 
+ * @return
+ * <ul>
+ * <li>`value` - When `min` < `value` < `max`.
+ * <li>`min` - When `min` >= `value`.
+ * <li>`max` - When `max` <= `value`.
+ * </ul>
+ */
+double Double_clamp(const double value, const double min, const double max) {
+    return value >= max ? max : value <= min ? min : value;
+}
+
+/**
+ * Clamps all values in the given tensor and sets the results into the given destination
+ * tensor.
+ * 
+ * @param *tensor       Tensor which to clamp.
+ * @param *destination  Destination tensor in which to write the clamped values.
+ * @param min           The minimum allowed value.
+ * @param max           The maximum allowed value.
+ * 
+ * @throws IllegalArgumentException - When the given tensor and destination do not match in shape.
+ */
+void IntegerTensor_clamp(const IntegerTensor* tensor, const IntegerTensor* destination,
+    const int min, const int max) {
+    (void)checkTensorCompatability(tensor->base, destination->base, "clamping");
+
+    int* dest = destination->tensor;
+    int* start = tensor->tensor;
+    const int* end = start + tensor->base->dataPoints;
+
+    while (start < end) {
+        *dest++ = (int)Integer_clamp(*start++, min, max);
+    }
+}
+
+/**
+ * Clamps all values in the given tensor and sets the results into the given destination
+ * tensor.
+ * 
+ * @param *tensor       Tensor which to clamp.
+ * @param *destination  Destination tensor in which to write the clamped values.
+ * @param min           The minimum allowed value.
+ * @param max           The maximum allowed value.
+ * 
+ * @throws IllegalArgumentException - When the given tensor and destination do not match in shape.
+ */
+void FloatTensor_clamp(const FloatTensor* tensor, const FloatTensor* destination,
+    const float min, const float max) {
+    (void)checkTensorCompatability(tensor->base, destination->base, "clamping");
+
+    float* dest = destination->tensor;
+    float* start = tensor->tensor;
+    const float* end = start + tensor->base->dataPoints;
+
+    while (start < end) {
+        *dest++ = (float)Float_clamp(*start++, min, max);
+    }
+}
+
+/**
+ * Clamps all values in the given tensor and sets the results into the given destination
+ * tensor.
+ * 
+ * @param *tensor       Tensor which to clamp.
+ * @param *destination  Destination tensor in which to write the clamped values.
+ * @param min           The minimum allowed value.
+ * @param max           The maximum allowed value.
+ * 
+ * @throws IllegalArgumentException - When the given tensor and destination do not match in shape.
+ */
+void DoubleTensor_clamp(const DoubleTensor* tensor, const DoubleTensor* destination,
+    const double min, const double max) {
+    (void)checkTensorCompatability(tensor->base, destination->base, "clamping");
+
+    double* dest = destination->tensor;
+    double* start = tensor->tensor;
+    const double* end = start + tensor->base->dataPoints;
+
+    while (start < end) {
+        *dest++ = (double)Double_clamp(*start++, min, max);
+    }
 }

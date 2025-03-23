@@ -57,6 +57,10 @@ int main() {
     testTensorArgMin_001();
     testTensorArgMax_001();
 
+    testTensorClamp_001();
+    testTensorClamp_002();
+    testTensorClamp_003();
+
     if (ENV_PROFILE_TESTING) {
         /*profileTensorAdd_001();
         profileTensorDivide_001();

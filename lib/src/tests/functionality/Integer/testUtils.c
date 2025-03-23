@@ -52,3 +52,63 @@ void testTensorArgMax_001() {
 
     testSuite_assertEquals(0, minIndex);
 }
+
+void testTensorClamp_001() {
+    int shape[] = {2, 3};
+    int max = 4;
+    int min = 0;
+    IntegerTensor* tensor = IntegerTensor_zeros(2, shape);
+    IntegerTensor* dest = IntegerTensor_zeros(2, shape);
+
+    for (int i = 0; i < tensor->base->dataPoints; i++) {
+        tensor->tensor[i] = i;
+    }
+
+    IntegerTensor_clamp(tensor, dest, min, max);
+    IntegerTensor_print(dest);
+
+    for (int i = 0; i < tensor->base->dataPoints; i++) {
+        const int num = dest->tensor[i];
+        (void)testSuite_assertInBetween(num, min, max);
+    }
+}
+
+void testTensorClamp_002() {
+    int shape[] = {2, 3};
+    float min = 0.2;
+    float max = 4.75;
+    FloatTensor* tensor = FloatTensor_zeros(2, shape);
+    FloatTensor* dest = FloatTensor_zeros(2, shape);
+
+    for (int i = 0; i < tensor->base->dataPoints; i++) {
+        tensor->tensor[i] = i * 3.141;
+    }
+
+    FloatTensor_clamp(tensor, dest, min, max);
+    FloatTensor_print(dest);
+
+    for (int i = 0; i < tensor->base->dataPoints; i++) {
+        const float num = dest->tensor[i];
+        (void)testSuite_assertInBetween(num, min, max);
+    }
+}
+
+void testTensorClamp_003() {
+    int shape[] = {2, 3};
+    double min = 0.4125645;
+    double max = 5.2139874;
+    DoubleTensor* tensor = DoubleTensor_zeros(2, shape);
+    DoubleTensor* dest = DoubleTensor_zeros(2, shape);
+
+    for (int i = 0; i < tensor->base->dataPoints; i++) {
+        tensor->tensor[i] = i * 3.14159265358979;
+    }
+
+    DoubleTensor_clamp(tensor, dest, min, max);
+    DoubleTensor_print(dest);
+
+    for (int i = 0; i < tensor->base->dataPoints; i++) {
+        const double num = dest->tensor[i];
+        (void)testSuite_assertInBetween(num, min, max);
+    }
+}

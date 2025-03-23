@@ -24,10 +24,22 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "testSuite.h"
 
+void printError(const double expected, const double got) {
+    printf("Assertion error!\n");
+    printf("> Expected: %f\n", expected);
+    printf("> Got: %f\n", got);
+}
+
 void testSuite_assertEquals(const int expected, const int got) {
     if (expected != got) {
-        printf("Assertion error!\n");
-        printf("> Expected: %i\n", expected);
-        printf("> Got: %i\n", got);
+        printError(expected, got);
+    }
+}
+
+void testSuite_assertInBetween(const double value, const double min, const double max) {
+    if (value > max) {
+        printError(max, value);
+    } else if (value < min) {
+        printError(min, value);
     }
 }

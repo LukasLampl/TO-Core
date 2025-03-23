@@ -23,5 +23,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define TEST_SUITE_H
 
 void testSuite_assertEquals(const int expected, const int got);
+void testSuite_assertInBetween(const double value, const double min, const double max);
 
 #endif

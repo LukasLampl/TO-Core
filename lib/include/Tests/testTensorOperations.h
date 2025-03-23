@@ -67,4 +67,8 @@ void testTensorArgMin_001();
 
 void testTensorArgMax_001();
 
+void testTensorClamp_001();
+void testTensorClamp_002();
+void testTensorClamp_003();
+
 #endif

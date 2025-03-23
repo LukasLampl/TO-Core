@@ -48,4 +48,8 @@ size_t DoubleTensor_argSearch(const DoubleTensor* tensor, const Double_SearchFun
 size_t DoubleTensor_argMin(const DoubleTensor* tensor);
 size_t DoubleTensor_argMax(const DoubleTensor* tensor);
 
+void IntegerTensor_clamp(const IntegerTensor* tensor, const IntegerTensor* destination, const int min, const int max);
+void FloatTensor_clamp(const FloatTensor* tensor, const FloatTensor* destination, const float min, const float max);
+void DoubleTensor_clamp(const DoubleTensor* tensor, const DoubleTensor* destination, const double min, const double max);
+
 #endif
