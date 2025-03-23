@@ -28,6 +28,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "Tensor/tensor.h"
 
 #include "Tests/testTensorOperations.h"
+#include "Tests/testUtil.h"
 
 int main() {
     ENV_UNIT_TESTING = 1;
@@ -54,12 +55,14 @@ int main() {
     testTensorStdDev_001();
     testTensorStdDev_002();*/
 
-    testTensorArgMin_001();
+    /*testTensorArgMin_001();
     testTensorArgMax_001();
 
     testTensorClamp_001();
     testTensorClamp_002();
-    testTensorClamp_003();
+    testTensorClamp_003();*/
+
+    testList_001();
 
     if (ENV_PROFILE_TESTING) {
         /*profileTensorAdd_001();

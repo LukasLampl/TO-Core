@@ -7,11 +7,14 @@ SRC_FILES = $(wildcard lib/src/main/*.c \
 			lib/src/main/Error/*.c \
 			lib/src/main/Operations/*.c \
 			lib/src/main/Tensor/*.c \
+			lib/src/main/Network/*.c \
+			lib/src/main/Utils/*.c \
 			lib/src/tests/*.c \
 			lib/src/tests/profile/*.c \
 			lib/src/tests/functionality/*.c \
 			lib/src/tests/profile/Integer/*.c \
-			lib/src/tests/functionality/Integer/*.c)
+			lib/src/tests/functionality/Integer/*.c \
+			lib/src/tests/functionality/Utils/*.c)
 
 # Object files (replace .c with .o for each source file)
 OBJ_FILES = $(SRC_FILES:.c=.o)
