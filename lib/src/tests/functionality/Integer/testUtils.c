@@ -30,7 +30,7 @@ void testTensorArgMin_001() {
     IntegerTensor* tensor = IntegerTensor_zeros(2, shape);
 
     for (int i = 0; i < tensor->base->dataPoints; i++) {
-        tensor->tensor[i] = tensor->base->dataPoints - i;
+        tensor->data[i] = tensor->base->dataPoints - i;
     }
 
     size_t minIndex = IntegerTensor_argMin(tensor);
@@ -44,7 +44,7 @@ void testTensorArgMax_001() {
     IntegerTensor* tensor = IntegerTensor_zeros(2, shape);
 
     for (int i = 0; i < tensor->base->dataPoints; i++) {
-        tensor->tensor[i] = tensor->base->dataPoints - i;
+        tensor->data[i] = tensor->base->dataPoints - i;
     }
 
     size_t minIndex = IntegerTensor_argMax(tensor);
@@ -61,14 +61,14 @@ void testTensorClamp_001() {
     IntegerTensor* dest = IntegerTensor_zeros(2, shape);
 
     for (int i = 0; i < tensor->base->dataPoints; i++) {
-        tensor->tensor[i] = i;
+        tensor->data[i] = i;
     }
 
     IntegerTensor_clamp(tensor, dest, min, max);
     IntegerTensor_print(dest);
 
     for (int i = 0; i < tensor->base->dataPoints; i++) {
-        const int num = dest->tensor[i];
+        const int num = dest->data[i];
         (void)testSuite_assertInBetween(num, min, max);
     }
 }
@@ -81,14 +81,14 @@ void testTensorClamp_002() {
     FloatTensor* dest = FloatTensor_zeros(2, shape);
 
     for (int i = 0; i < tensor->base->dataPoints; i++) {
-        tensor->tensor[i] = i * 3.141;
+        tensor->data[i] = i * 3.141;
     }
 
     FloatTensor_clamp(tensor, dest, min, max);
     FloatTensor_print(dest);
 
     for (int i = 0; i < tensor->base->dataPoints; i++) {
-        const float num = dest->tensor[i];
+        const float num = dest->data[i];
         (void)testSuite_assertInBetween(num, min, max);
     }
 }
@@ -101,14 +101,14 @@ void testTensorClamp_003() {
     DoubleTensor* dest = DoubleTensor_zeros(2, shape);
 
     for (int i = 0; i < tensor->base->dataPoints; i++) {
-        tensor->tensor[i] = i * 3.14159265358979;
+        tensor->data[i] = i * 3.14159265358979;
     }
 
     DoubleTensor_clamp(tensor, dest, min, max);
     DoubleTensor_print(dest);
 
     for (int i = 0; i < tensor->base->dataPoints; i++) {
-        const double num = dest->tensor[i];
+        const double num = dest->data[i];
         (void)testSuite_assertInBetween(num, min, max);
     }
 }

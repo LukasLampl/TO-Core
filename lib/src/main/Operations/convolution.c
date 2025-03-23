@@ -46,8 +46,8 @@ int IntegerTensor_dotProduct1D(const IntegerTensor* tensor,
 
     for (int kx = 0; kx < kernelWidth; kx++) {
         const int t_val = tensorOffset + kx >= tensor->base->dataPoints ?
-                            0 : tensor->tensor[tensorOffset + kx];
-        const int k_val = kernel->tensor[kernelOffset + kx];
+                            0 : tensor->data[tensorOffset + kx];
+        const int k_val = kernel->data[kernelOffset + kx];
         dotProduct += t_val * k_val;
     }
 
@@ -74,8 +74,8 @@ float FloatTensor_dotProduct1D(const FloatTensor* tensor,
 
     for (int kx = 0; kx < kernelWidth; kx++) {
         const float t_val = tensorOffset + kx >= tensor->base->dataPoints ?
-                            0 : tensor->tensor[tensorOffset + kx];
-        const float k_val = kernel->tensor[kernelOffset + kx];
+                            0 : tensor->data[tensorOffset + kx];
+        const float k_val = kernel->data[kernelOffset + kx];
         dotProduct += t_val * k_val;
     }
 
@@ -102,8 +102,8 @@ double DoubleTensor_dotProduct1D(const DoubleTensor* tensor,
 
     for (int kx = 0; kx < kernelWidth; kx++) {
         const double t_val = tensorOffset + kx >= tensor->base->dataPoints ?
-                            0 : tensor->tensor[tensorOffset + kx];
-        const double k_val = kernel->tensor[kernelOffset + kx];
+                            0 : tensor->data[tensorOffset + kx];
+        const double k_val = kernel->data[kernelOffset + kx];
         dotProduct += t_val * k_val;
     }
 
@@ -147,7 +147,7 @@ int IntegerTensor_convolve_kernelDotProduct(const IntegerTensor* tensor,
         dotProduct = (int)IntegerTensor_dotProduct1D(tensor, kernel, tensorPtr, kernelPtr);
 
         if (highestKernelDimension == true) {
-            dest->tensor[(*destPtr)++] = dotProduct;
+            dest->data[(*destPtr)++] = dotProduct;
         }
 
         return dotProduct;
@@ -167,7 +167,7 @@ int IntegerTensor_convolve_kernelDotProduct(const IntegerTensor* tensor,
     }
 
     if (highestKernelDimension == true) {
-        dest->tensor[(*destPtr)++] = dotProduct;
+        dest->data[(*destPtr)++] = dotProduct;
     }
 
     return dotProduct;
@@ -205,7 +205,7 @@ float FloatTensor_convolve_kernelDotProduct(const FloatTensor* tensor,
         dotProduct = (float)FloatTensor_dotProduct1D(tensor, kernel, tensorPtr, kernelPtr);
 
         if (highestKernelDimension == true) {
-            dest->tensor[(*destPtr)++] = dotProduct;
+            dest->data[(*destPtr)++] = dotProduct;
         }
 
         return dotProduct;
@@ -225,7 +225,7 @@ float FloatTensor_convolve_kernelDotProduct(const FloatTensor* tensor,
     }
 
     if (highestKernelDimension == true) {
-        dest->tensor[(*destPtr)++] = dotProduct;
+        dest->data[(*destPtr)++] = dotProduct;
     }
 
     return dotProduct;
@@ -263,7 +263,7 @@ double DoubleTensor_convolve_kernelDotProduct(const DoubleTensor* tensor,
         dotProduct = (double)DoubleTensor_dotProduct1D(tensor, kernel, tensorPtr, kernelPtr);
 
         if (highestKernelDimension == true) {
-            dest->tensor[(*destPtr)++] = dotProduct;
+            dest->data[(*destPtr)++] = dotProduct;
         }
 
         return dotProduct;
@@ -283,7 +283,7 @@ double DoubleTensor_convolve_kernelDotProduct(const DoubleTensor* tensor,
     }
 
     if (highestKernelDimension == true) {
-        dest->tensor[(*destPtr)++] = dotProduct;
+        dest->data[(*destPtr)++] = dotProduct;
     }
 
     return dotProduct;

@@ -178,9 +178,9 @@ size_t IntegerTensor_argSearch(const IntegerTensor* tensor, const Integer_Search
 
     size_t index = 0;
     size_t currentIndex = 0;
-    int peak = (int)tensor->tensor[0];
+    int peak = (int)tensor->data[0];
 
-    int* start = tensor->tensor;
+    int* start = tensor->data;
     const int* end = start + tensor->base->dataPoints;
 
     while (start < end) {
@@ -226,9 +226,9 @@ size_t FloatTensor_argSearch(const FloatTensor* tensor, const Float_SearchFuncti
 
     size_t index = 0;
     size_t currentIndex = 0;
-    float peak = (float)tensor->tensor[0];
+    float peak = (float)tensor->data[0];
 
-    float* start = tensor->tensor;
+    float* start = tensor->data;
     const float* end = start + tensor->base->dataPoints;
 
     while (start < end) {
@@ -274,9 +274,9 @@ size_t DoubleTensor_argSearch(const DoubleTensor* tensor, const Double_SearchFun
 
     size_t index = 0;
     size_t currentIndex = 0;
-    double peak = (double)tensor->tensor[0];
+    double peak = (double)tensor->data[0];
 
-    double* start = tensor->tensor;
+    double* start = tensor->data;
     const double* end = start + tensor->base->dataPoints;
 
     while (start < end) {
@@ -453,8 +453,8 @@ void IntegerTensor_clamp(const IntegerTensor* tensor, const IntegerTensor* desti
     const int min, const int max) {
     (void)checkTensorCompatability(tensor->base, destination->base, "clamping");
 
-    int* dest = destination->tensor;
-    int* start = tensor->tensor;
+    int* dest = destination->data;
+    int* start = tensor->data;
     const int* end = start + tensor->base->dataPoints;
 
     while (start < end) {
@@ -477,8 +477,8 @@ void FloatTensor_clamp(const FloatTensor* tensor, const FloatTensor* destination
     const float min, const float max) {
     (void)checkTensorCompatability(tensor->base, destination->base, "clamping");
 
-    float* dest = destination->tensor;
-    float* start = tensor->tensor;
+    float* dest = destination->data;
+    float* start = tensor->data;
     const float* end = start + tensor->base->dataPoints;
 
     while (start < end) {
@@ -501,8 +501,8 @@ void DoubleTensor_clamp(const DoubleTensor* tensor, const DoubleTensor* destinat
     const double min, const double max) {
     (void)checkTensorCompatability(tensor->base, destination->base, "clamping");
 
-    double* dest = destination->tensor;
-    double* start = tensor->tensor;
+    double* dest = destination->data;
+    double* start = tensor->data;
     const double* end = start + tensor->base->dataPoints;
 
     while (start < end) {

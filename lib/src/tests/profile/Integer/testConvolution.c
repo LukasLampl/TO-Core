@@ -40,11 +40,11 @@ void profileTensorConvolve3D_001() {
     printf("\nPreparing conolution 3D of %ld elements.\n", t->base->dataPoints);
 
     for (int i = 0; i < t->base->dataPoints; i++) {
-        t->tensor[i] = 1;
+        t->data[i] = 1;
     }
 
     for (int i = 0; i < kernel->base->dataPoints; i++) {
-        kernel->tensor[i] = 1;
+        kernel->data[i] = 1;
     }
 
     clock_t start = clock();
@@ -56,7 +56,7 @@ void profileTensorConvolve3D_001() {
     size_t sum = 0;
 
     for (int i = 0; i < dest->base->dataPoints; i++) {
-        sum += dest->tensor[i];
+        sum += dest->data[i];
     }
 
     testSuite_assertEquals(shape[0] * shape[1] * shape[2], sum);

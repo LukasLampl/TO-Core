@@ -24,4 +24,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 int int_abs(const int number);
 
+int int_max(const int number1, const int number2);
+float float_max(const float number1, const float number2);
+double double_max(const double number1, const double number2);
+
 #endif

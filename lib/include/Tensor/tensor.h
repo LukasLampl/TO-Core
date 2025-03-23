@@ -71,7 +71,7 @@ typedef struct {
     /**
      * Data of the tensor.
      */
-    int *tensor;
+    int *data;
 } IntegerTensor;
 
 /**
@@ -86,7 +86,7 @@ typedef struct {
     /**
      * Data of the tensor.
      */
-    float *tensor;
+    float *data;
 } FloatTensor;
 
 /**
@@ -101,8 +101,15 @@ typedef struct {
     /**
      * Data of the tensor.
      */
-    double *tensor;
+    double *data;
 } DoubleTensor;
+
+typedef struct {
+    IntegerTensor* tensor;
+
+    int* gradient;
+    int applyGradient;
+} IntegerGradientTensor;
 
 void freeIntegerTensor(IntegerTensor* tensor);
 void freeFloatTensor(FloatTensor* tensor);

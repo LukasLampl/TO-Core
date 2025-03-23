@@ -51,7 +51,7 @@ void testTensorStdDev_002() {
     IntegerTensor* t = IntegerTensor_zeros(3, shape);
 
     for (int i = 0; i < t->base->dataPoints; i++) {
-        t->tensor[i] = i;
+        t->data[i] = i;
     }
 
     double stdDev = IntegerTensor_getStandardDeviation(t);

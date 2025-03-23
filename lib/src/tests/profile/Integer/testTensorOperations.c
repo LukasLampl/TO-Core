@@ -39,8 +39,8 @@ void profileTensorMultiply_001() {
     IntegerTensor* tensor_c = IntegerTensor_zeros(dimensions, shape);
 
     for (int i = 0; i < N; i++) {
-        tensor_a->tensor[i] = i;
-        tensor_b->tensor[i] = N - i;
+        tensor_a->data[i] = i;
+        tensor_b->data[i] = N - i;
     }
 
     clock_t start = clock();
@@ -55,8 +55,8 @@ void profileTensorMultiply_001() {
     size_t result = 0;
 
     for (int i = 0; i < N; i++) {
-        testSuite_assertEquals(tensor_c->tensor[i], (i * (N - i)));
-        result += tensor_c->tensor[i];
+        testSuite_assertEquals(tensor_c->data[i], (i * (N - i)));
+        result += tensor_c->data[i];
     }
 
     printf("> Sum: %ld\n", result);
@@ -76,8 +76,8 @@ void profileTensorAdd_001() {
     IntegerTensor* tensor_c = IntegerTensor_zeros(dimensions, shape);
 
     for (int i = 0; i < N; i++) {
-        tensor_a->tensor[i] = i;
-        tensor_b->tensor[i] = N - i;
+        tensor_a->data[i] = i;
+        tensor_b->data[i] = N - i;
     }
 
     clock_t start = clock();
@@ -92,8 +92,8 @@ void profileTensorAdd_001() {
     size_t result = 0;
 
     for (int i = 0; i < N; i++) {
-        testSuite_assertEquals(tensor_c->tensor[i], (i + (N - i)));
-        result += tensor_c->tensor[i];
+        testSuite_assertEquals(tensor_c->data[i], (i + (N - i)));
+        result += tensor_c->data[i];
     }
 
     printf("> Sum: %ld\n", result);
@@ -113,8 +113,8 @@ void profileTensorDivide_001() {
     IntegerTensor* tensor_c = IntegerTensor_zeros(dimensions, shape);
 
     for (int i = 0; i < N; i++) {
-        tensor_a->tensor[i] = i;
-        tensor_b->tensor[i] = N - i;
+        tensor_a->data[i] = i;
+        tensor_b->data[i] = N - i;
     }
 
     clock_t start = clock();
@@ -129,8 +129,8 @@ void profileTensorDivide_001() {
     size_t result = 0;
 
     for (int i = 0; i < N; i++) {
-        testSuite_assertEquals(tensor_c->tensor[i], (i / (N - i)));
-        result += tensor_c->tensor[i];
+        testSuite_assertEquals(tensor_c->data[i], (i / (N - i)));
+        result += tensor_c->data[i];
     }
 
     printf("> Sum: %ld\n", result);
@@ -150,8 +150,8 @@ void profileTensorSubtract_001() {
     IntegerTensor* tensor_c = IntegerTensor_zeros(dimensions, shape);
 
     for (int i = 0; i < N; i++) {
-        tensor_a->tensor[i] = i;
-        tensor_b->tensor[i] = N - i;
+        tensor_a->data[i] = i;
+        tensor_b->data[i] = N - i;
     }
 
     clock_t start = clock();
@@ -166,8 +166,8 @@ void profileTensorSubtract_001() {
     size_t result = 0;
 
     for (int i = 0; i < N; i++) {
-        testSuite_assertEquals(tensor_c->tensor[i], (i - (N - i)));
-        result += tensor_c->tensor[i];
+        testSuite_assertEquals(tensor_c->data[i], (i - (N - i)));
+        result += tensor_c->data[i];
     }
 
     printf("> Sum: %ld\n", result);

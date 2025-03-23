@@ -92,17 +92,17 @@ double getMeanValue(const void* tensor, const TensorType tensorType) {
     switch (tensorType) {
     case _TENSOR_TYPE_INTEGER_: {
         IntegerTensor* t = (IntegerTensor*)tensor;
-        mean = (double)getSumOfRow(t->tensor, t->tensor + t->base->dataPoints, _TENSOR_TYPE_INTEGER_);
+        mean = (double)getSumOfRow(t->data, t->data + t->base->dataPoints, _TENSOR_TYPE_INTEGER_);
         break;
     }
     case _TENSOR_TYPE_FLOAT_: {
         FloatTensor* t = (FloatTensor*)tensor;
-        mean = (double)getSumOfRow(t->tensor, t->tensor + t->base->dataPoints, _TENSOR_TYPE_FLOAT_);
+        mean = (double)getSumOfRow(t->data, t->data + t->base->dataPoints, _TENSOR_TYPE_FLOAT_);
         break;
     }
     case _TENSOR_TYPE_DOUBLE_: {
         DoubleTensor* t = (DoubleTensor*)tensor;
-        mean = (double)getSumOfRow(t->tensor, t->tensor + t->base->dataPoints, _TENSOR_TYPE_DOUBLE_);
+        mean = (double)getSumOfRow(t->data, t->data + t->base->dataPoints, _TENSOR_TYPE_DOUBLE_);
         break;
     }
     default:
@@ -165,7 +165,7 @@ double getStandardDeviation(const void* tensor, const TensorType tensorType, dou
 
     switch (tensorType) {
     case _TENSOR_TYPE_INTEGER_: {
-        int* start = ((IntegerTensor*)tensor)->tensor;
+        int* start = ((IntegerTensor*)tensor)->data;
         const int* end = start + dataPoints;
 
         while (start < end) {
@@ -175,7 +175,7 @@ double getStandardDeviation(const void* tensor, const TensorType tensorType, dou
         break;
     }
     case _TENSOR_TYPE_FLOAT_: {
-        float* start = ((FloatTensor*)tensor)->tensor;
+        float* start = ((FloatTensor*)tensor)->data;
         const float* end = start + dataPoints;
 
         while (start < end) {
@@ -185,7 +185,7 @@ double getStandardDeviation(const void* tensor, const TensorType tensorType, dou
         break;
     }
     case _TENSOR_TYPE_DOUBLE_: {
-        double* start = ((DoubleTensor*)tensor)->tensor;
+        double* start = ((DoubleTensor*)tensor)->data;
         const double* end = start + dataPoints;
 
         while (start < end) {

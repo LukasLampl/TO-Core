@@ -125,9 +125,9 @@ void IntegerTensor_operate(const IntegerTensor* a, const IntegerTensor* b,
     (void)checkTensorCompatability(a->base, b->base, "binary operation");
     (void)checkTensorCompatability(a->base, destination->base, "binary operation");
 
-    const int* data_a = a->tensor;
-    const int* data_b = b->tensor;
-    int* dest = destination->tensor;
+    const int* data_a = a->data;
+    const int* data_b = b->data;
+    int* dest = destination->data;
     const int* endPtr = data_a + a->base->dataPoints;
 
     while (data_a < endPtr) {
@@ -154,9 +154,9 @@ void FloatTensor_operate(const FloatTensor* a, const FloatTensor* b,
     (void)checkTensorCompatability(a->base, b->base, "binary operation");
     (void)checkTensorCompatability(a->base, destination->base, "binary operation");
 
-    const float* data_a = a->tensor;
-    const float* data_b = b->tensor;
-    float* dest = destination->tensor;
+    const float* data_a = a->data;
+    const float* data_b = b->data;
+    float* dest = destination->data;
     const float* endPtr = data_a + a->base->dataPoints;
 
     while (data_a < endPtr) {
@@ -183,9 +183,9 @@ void DoubleTensor_operate(const DoubleTensor* a, const DoubleTensor* b,
     (void)checkTensorCompatability(a->base, b->base, "binary operation");
     (void)checkTensorCompatability(a->base, destination->base, "binary operation");
 
-    const double* data_a = a->tensor;
-    const double* data_b = b->tensor;
-    double* dest = destination->tensor;
+    const double* data_a = a->data;
+    const double* data_b = b->data;
+    double* dest = destination->data;
     const double* endPtr = data_a + a->base->dataPoints;
 
     while (data_a < endPtr) {
@@ -277,8 +277,8 @@ void IntegerTensor_scalarMultiply(const IntegerTensor* a, const int scalar,
     const IntegerTensor* destination) {
     (void)checkTensorCompatability(a->base, destination->base, "scalar multiply");
 
-    const int* data_a = a->tensor;
-    int* dest = destination->tensor;
+    const int* data_a = a->data;
+    int* dest = destination->data;
     const int* endPtr = data_a + a->base->dataPoints;
 
     while (data_a < endPtr) {
@@ -370,8 +370,8 @@ void FloatTensor_scalarMultiply(const FloatTensor* a, const float scalar,
     const FloatTensor* destination) {
     (void)checkTensorCompatability(a->base, destination->base, "scalar multiply");
 
-    const float* data_a = a->tensor;
-    float* dest = destination->tensor;
+    const float* data_a = a->data;
+    float* dest = destination->data;
     const float* endPtr = data_a + a->base->dataPoints;
 
     while (data_a < endPtr) {
@@ -463,8 +463,8 @@ void DoubleTensor_scalarMultiply(const DoubleTensor* a, const double scalar,
     const DoubleTensor* destination) {
     (void)checkTensorCompatability(a->base, destination->base, "scalar multiply");
 
-    const double* data_a = a->tensor;
-    double* dest = destination->tensor;
+    const double* data_a = a->data;
+    double* dest = destination->data;
     const double* endPtr = data_a + a->base->dataPoints;
 
     while (data_a < endPtr) {

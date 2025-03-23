@@ -32,17 +32,17 @@ void testTensorMSE_001() {
     IntegerTensor* t_1 = IntegerTensor_zeros(1, shape);
     IntegerTensor* t_2 = IntegerTensor_zeros(1, shape);
 
-    t_1->tensor[0] = 0;
-    t_1->tensor[1] = 1;
-    t_1->tensor[2] = 2;
-    t_1->tensor[3] = 3;
-    t_1->tensor[4] = 4;
+    t_1->data[0] = 0;
+    t_1->data[1] = 1;
+    t_1->data[2] = 2;
+    t_1->data[3] = 3;
+    t_1->data[4] = 4;
 
-    t_2->tensor[0] = 4;
-    t_2->tensor[1] = 3;
-    t_2->tensor[2] = 2;
-    t_2->tensor[3] = 1;
-    t_2->tensor[4] = 0;
+    t_2->data[0] = 4;
+    t_2->data[1] = 3;
+    t_2->data[2] = 2;
+    t_2->data[3] = 1;
+    t_2->data[4] = 0;
 
     double MSE = IntegerTensor_MSE(t_1, t_2);
     testSuite_assertEquals(8, MSE);
@@ -53,17 +53,17 @@ void testTensorSAD_001() {
     IntegerTensor* t_1 = IntegerTensor_zeros(1, shape);
     IntegerTensor* t_2 = IntegerTensor_zeros(1, shape);
 
-    t_1->tensor[0] = 0;
-    t_1->tensor[1] = 1;
-    t_1->tensor[2] = 2;
-    t_1->tensor[3] = 3;
-    t_1->tensor[4] = 4;
+    t_1->data[0] = 0;
+    t_1->data[1] = 1;
+    t_1->data[2] = 2;
+    t_1->data[3] = 3;
+    t_1->data[4] = 4;
 
-    t_2->tensor[0] = 4;
-    t_2->tensor[1] = 3;
-    t_2->tensor[2] = 2;
-    t_2->tensor[3] = 1;
-    t_2->tensor[4] = 0;
+    t_2->data[0] = 4;
+    t_2->data[1] = 3;
+    t_2->data[2] = 2;
+    t_2->data[3] = 1;
+    t_2->data[4] = 0;
 
     double SAD = IntegerTensor_SAD(t_1, t_2);
     testSuite_assertEquals(12, SAD);
@@ -74,17 +74,17 @@ void testTensorMAD_001() {
     IntegerTensor* t_1 = IntegerTensor_zeros(1, shape);
     IntegerTensor* t_2 = IntegerTensor_zeros(1, shape);
 
-    t_1->tensor[0] = 0;
-    t_1->tensor[1] = 1;
-    t_1->tensor[2] = 2;
-    t_1->tensor[3] = 3;
-    t_1->tensor[4] = 4;
+    t_1->data[0] = 0;
+    t_1->data[1] = 1;
+    t_1->data[2] = 2;
+    t_1->data[3] = 3;
+    t_1->data[4] = 4;
 
-    t_2->tensor[0] = 4;
-    t_2->tensor[1] = 3;
-    t_2->tensor[2] = 2;
-    t_2->tensor[3] = 1;
-    t_2->tensor[4] = 0;
+    t_2->data[0] = 4;
+    t_2->data[1] = 3;
+    t_2->data[2] = 2;
+    t_2->data[3] = 1;
+    t_2->data[4] = 0;
 
     double MAD = IntegerTensor_MAD(t_1, t_2);
     testSuite_assertEquals(2.4, MAD);

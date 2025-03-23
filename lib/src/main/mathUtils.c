@@ -19,6 +19,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include "mathUtils.h"
+
 int int_abs(const int number) {
     return number < 0 ? -number : number;
+}
+
+int int_max(const int number1, const int number2) {
+    return number1 > number2 ? number1 : number2;
+}
+
+float float_max(const float number1, const float number2) {
+    return number1 > number2 ? number1 : number2;
+}
+
+double double_max(const double number1, const double number2) {
+    return number1 > number2 ? number1 : number2;
 }

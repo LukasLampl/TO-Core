@@ -43,8 +43,8 @@ double IntegerTensor_MSE(const IntegerTensor* a, const IntegerTensor *b) {
     (void)checkTensorCompatability(a->base, b->base, "MSE");
 
     double MSE = 0.0;
-    const int* data_a = a->tensor;
-    const int* data_b = b->tensor;
+    const int* data_a = a->data;
+    const int* data_b = b->data;
     const int* endPtr = data_a + a->base->dataPoints;
 
     while (data_a < endPtr) {
@@ -71,8 +71,8 @@ double IntegerTensor_SAD(const IntegerTensor* a, const IntegerTensor *b) {
     (void)checkTensorCompatability(a->base, b->base, "SAD");
 
     double SAD = 0.0;
-    const int* data_a = a->tensor;
-    const int* data_b = b->tensor;
+    const int* data_a = a->data;
+    const int* data_b = b->data;
     const int* endPtr = data_a + a->base->dataPoints;
 
     while (data_a < endPtr) {
@@ -117,8 +117,8 @@ double IntegerTensor_Huber_Loss(const IntegerTensor* a, const IntegerTensor *b, 
 
     double loss = 0.0;
     const int halfDelta = delta >> 1;
-    const int* data_a = a->tensor;
-    const int* data_b = b->tensor;
+    const int* data_a = a->data;
+    const int* data_b = b->data;
     const int* endPtr = data_a + a->base->dataPoints;
 
     while (data_a < endPtr) {

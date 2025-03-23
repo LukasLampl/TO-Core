@@ -59,9 +59,9 @@ void freeIntegerTensor(IntegerTensor* tensor) {
         tensor->base = NULL;
     }
 
-    if (tensor->tensor != NULL) {
-        (void)free(tensor->tensor);
-        tensor->tensor = NULL;
+    if (tensor->data != NULL) {
+        (void)free(tensor->data);
+        tensor->data = NULL;
     }
 
     (void)free(tensor);
@@ -78,9 +78,9 @@ void freeFloatTensor(FloatTensor* tensor) {
         tensor->base = NULL;
     }
 
-    if (tensor->tensor != NULL) {
-        (void)free(tensor->tensor);
-        tensor->tensor = NULL;
+    if (tensor->data != NULL) {
+        (void)free(tensor->data);
+        tensor->data = NULL;
     }
 
     (void)free(tensor);
@@ -97,9 +97,9 @@ void freeDoubleTensor(DoubleTensor* tensor) {
         tensor->base = NULL;
     }
 
-    if (tensor->tensor != NULL) {
-        (void)free(tensor->tensor);
-        tensor->tensor = NULL;
+    if (tensor->data != NULL) {
+        (void)free(tensor->data);
+        tensor->data = NULL;
     }
 
     (void)free(tensor);
@@ -235,15 +235,15 @@ void* createTensor(const int dimensions, const int *shape, const TensorType tens
     switch (tensorType) {
     case _TENSOR_TYPE_INTEGER_:
         ((IntegerTensor*)tensor)->base = base;
-        ((IntegerTensor*)tensor)->tensor = (int*)data;
+        ((IntegerTensor*)tensor)->data = (int*)data;
         break;
     case _TENSOR_TYPE_FLOAT_:
         ((FloatTensor*)tensor)->base = base;
-        ((FloatTensor*)tensor)->tensor = (float*)data;
+        ((FloatTensor*)tensor)->data = (float*)data;
         break;
     case _TENSOR_TYPE_DOUBLE_:
         ((DoubleTensor*)tensor)->base = base;
-        ((DoubleTensor*)tensor)->tensor = (double*)data;
+        ((DoubleTensor*)tensor)->data = (double*)data;
         break;
     default:
         (void)throwIllegalArgumentException("The tensor type does not exist!");
@@ -263,7 +263,7 @@ void* createTensor(const int dimensions, const int *shape, const TensorType tens
 void initTensorByValue(const void* tensor, const TensorType tensorType, const double value) {
     switch (tensorType) {
     case _TENSOR_TYPE_INTEGER_: {
-        int* data = (int*)((IntegerTensor*)tensor)->tensor;
+        int* data = (int*)((IntegerTensor*)tensor)->data;
         const int* end = data + ((IntegerTensor*)tensor)->base->dataPoints;
 
         while (data < end) {
@@ -273,7 +273,7 @@ void initTensorByValue(const void* tensor, const TensorType tensorType, const do
         break;
     }
     case _TENSOR_TYPE_FLOAT_: {
-        float* data = (float*)((FloatTensor*)tensor)->tensor;
+        float* data = (float*)((FloatTensor*)tensor)->data;
         const float* end = data + ((FloatTensor*)tensor)->base->dataPoints;
 
         while (data < end) {
@@ -283,7 +283,7 @@ void initTensorByValue(const void* tensor, const TensorType tensorType, const do
         break;
     }
     case _TENSOR_TYPE_DOUBLE_: {
-        double* data = (double*)((DoubleTensor*)tensor)->tensor;
+        double* data = (double*)((DoubleTensor*)tensor)->data;
         const double* end = data + ((DoubleTensor*)tensor)->base->dataPoints;
 
         while (data < end) {
@@ -511,7 +511,7 @@ void IntegerTensor_print(const IntegerTensor* tensor) {
         return;
     }
 
-    (void)printTensor(tensor->tensor, tensor->base, 0, 0, jumpTable, DECIMAL);
+    (void)printTensor(tensor->data, tensor->base, 0, 0, jumpTable, DECIMAL);
     (void)free(jumpTable);
 }
 
@@ -528,7 +528,7 @@ void FloatTensor_print(const FloatTensor* tensor) {
         return;
     }
 
-    (void)printTensor(tensor->tensor, tensor->base, 0, 0, jumpTable, FLOAT);
+    (void)printTensor(tensor->data, tensor->base, 0, 0, jumpTable, FLOAT);
     (void)free(jumpTable);
 }
 
@@ -545,7 +545,7 @@ void DoubleTensor_print(const DoubleTensor* tensor) {
         return;
     }
 
-    (void)printTensor(tensor->tensor, tensor->base, 0, 0, jumpTable, DOUBLE);
+    (void)printTensor(tensor->data, tensor->base, 0, 0, jumpTable, DOUBLE);
     (void)free(jumpTable);
 }
 

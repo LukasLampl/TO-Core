@@ -38,14 +38,14 @@ void testTensorMultiply_001() {
     IntegerTensor* tensor_c = IntegerTensor_zeros(dimensions, shape);
 
     for (int i = 0; i < N; i++) {
-        tensor_a->tensor[i] = i;
-        tensor_b->tensor[i] = N - i;
+        tensor_a->data[i] = i;
+        tensor_b->data[i] = N - i;
     }
 
     IntegerTensor_multiply(tensor_a, tensor_b, tensor_c);
 
     for (int i = 0; i < N; i++) {
-        testSuite_assertEquals(tensor_c->tensor[i], (i * (N - i)));
+        testSuite_assertEquals(tensor_c->data[i], (i * (N - i)));
     }
 
     freeIntegerTensor(tensor_a);
@@ -63,14 +63,14 @@ void testTensorMultiply_002() {
     FloatTensor* tensor_c = FloatTensor_zeros(dimensions, shape);
 
     for (int i = 0; i < N; i++) {
-        tensor_a->tensor[i] = i;
-        tensor_b->tensor[i] = N - i;
+        tensor_a->data[i] = i;
+        tensor_b->data[i] = N - i;
     }
 
     FloatTensor_multiply(tensor_a, tensor_b, tensor_c);
 
     for (int i = 0; i < N; i++) {
-        testSuite_assertEquals(tensor_c->tensor[i], (i * (N - i)));
+        testSuite_assertEquals(tensor_c->data[i], (i * (N - i)));
     }
 
     freeFloatTensor(tensor_a);
@@ -88,14 +88,14 @@ void testTensorAdd_001() {
     IntegerTensor* tensor_c = IntegerTensor_zeros(dimensions, shape);
 
     for (int i = 0; i < N; i++) {
-        tensor_a->tensor[i] = i;
-        tensor_b->tensor[i] = N - i;
+        tensor_a->data[i] = i;
+        tensor_b->data[i] = N - i;
     }
 
     IntegerTensor_add(tensor_a, tensor_b, tensor_c);
 
     for (int i = 0; i < N; i++) {
-        testSuite_assertEquals(tensor_c->tensor[i], (i + (N - i)));
+        testSuite_assertEquals(tensor_c->data[i], (i + (N - i)));
     }
 
     freeIntegerTensor(tensor_a);
@@ -113,14 +113,14 @@ void testTensorDivide_001() {
     IntegerTensor* tensor_c = IntegerTensor_zeros(dimensions, shape);
 
     for (int i = 0; i < N; i++) {
-        tensor_a->tensor[i] = i;
-        tensor_b->tensor[i] = N - i;
+        tensor_a->data[i] = i;
+        tensor_b->data[i] = N - i;
     }
 
     IntegerTensor_divide(tensor_a, tensor_b, tensor_c);
 
     for (int i = 0; i < N; i++) {
-        testSuite_assertEquals(tensor_c->tensor[i], (i / (N - i)));
+        testSuite_assertEquals(tensor_c->data[i], (i / (N - i)));
     }
 
     freeIntegerTensor(tensor_a);
@@ -138,14 +138,14 @@ void testTensorSubtract_001() {
     IntegerTensor* tensor_c = IntegerTensor_zeros(dimensions, shape);
 
     for (int i = 0; i < N; i++) {
-        tensor_a->tensor[i] = i;
-        tensor_b->tensor[i] = N - i;
+        tensor_a->data[i] = i;
+        tensor_b->data[i] = N - i;
     }
 
     IntegerTensor_subtract(tensor_a, tensor_b, tensor_c);
 
     for (int i = 0; i < N; i++) {
-        testSuite_assertEquals(tensor_c->tensor[i], (i - (N - i)));
+        testSuite_assertEquals(tensor_c->data[i], (i - (N - i)));
     }
 
     freeIntegerTensor(tensor_a);
