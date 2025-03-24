@@ -19,28 +19,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#include "Error/exceptions.h"
-#include "Network/layer.h"
+#ifndef TEST_NETWORK_H
+#define TEST_NETWORK_H
 
-#define true 1
-#define false 0
+void test_SN_Convolution_001();
 
-Layer *createLayer(const TensorType tensorType, void* destination) {
-    Layer* layer = (Layer*)calloc(1, sizeof(Layer));
-
-    if (layer == NULL) {
-        (void)throwMemoryAllocationException("While trying to create new layer.");
-        return NULL;
-    }
-
-    layer->inputType = tensorType;
-    layer->destination = destination;
-    layer->isDestinationSet = destination == NULL ? false : true;
-    return layer;
-}
-
-void freeLayer(Layer* layer) {
-    if (layer != NULL) {
-        (void)free(layer);
-    }
-}
+#endif

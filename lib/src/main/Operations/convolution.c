@@ -19,6 +19,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <stdio.h>
+
 #include "Error/exceptions.h"
 #include "Tensor/tensor.h"
 #include "Operations/convolution.h"
@@ -484,7 +486,7 @@ ConvolutionLayer* createConvolutionLayer(const void* kernel, const void* destina
         return NULL;
     }
 
-    Layer* base = (Layer*)createLayer(tensorType);
+    Layer* base = (Layer*)createLayer(tensorType, (void*)destination);
     ConvolutionLayer* layer = (ConvolutionLayer*)calloc(1, sizeof(ConvolutionLayer));
 
     if (base == NULL || layer == NULL) {
@@ -497,8 +499,6 @@ ConvolutionLayer* createConvolutionLayer(const void* kernel, const void* destina
     layer->base = base;
     layer->kernel = kernel;
     layer->stride = stride;
-    layer->destination = destination;
-    layer->isDestinationSet = destination == NULL ? false : true;
     return layer;
 }
 
@@ -557,6 +557,44 @@ ConvolutionLayer* Double_createConvolutionLayer(const DoubleTensor* kernel,
 }
 
 /**
+ * Inits the destination tensor of the given layer to the minimum size for
+ * the convolution to work.
+ * 
+ * @param *layer    Layer for which to create the destination.
+ */
+void initDestinationTensor(const ConvolutionLayer* layer, const void* inputTensor) {
+    const Tensor* input_base = (Tensor*)getTensorBaseByType(inputTensor, layer->base->inputType);
+    const Tensor* kernel_base = (Tensor*)getTensorBaseByType(layer->kernel, layer->base->inputType);
+    const int stride = layer->stride;
+
+    int* shape = (int*)calloc(input_base->dimensions, sizeof(int));
+
+    if (shape == NULL) {
+        (void)throwMemoryAllocationException("At destination tensor creation.");
+        return;
+    }
+
+    for (int i = 0; i < input_base->dimensions; i++) {
+        const int input_size = input_base->shape[i];
+        const int kernel_size = kernel_base->shape[i];
+        const int output_size = (input_size - kernel_size) / stride + 1;
+        shape[i] = output_size;
+    }
+
+    switch (layer->base->inputType) {
+    case _TENSOR_TYPE_INTEGER_:
+        layer->base->destination = (IntegerTensor*)IntegerTensor_zeros(input_base->dimensions, shape);
+        break;
+    case _TENSOR_TYPE_FLOAT_:
+        layer->base->destination = (FloatTensor*)FloatTensor_zeros(input_base->dimensions, shape);
+        break;
+    case _TENSOR_TYPE_DOUBLE_:
+        layer->base->destination = (DoubleTensor*)DoubleTensor_zeros(input_base->dimensions, shape);
+        break;
+    }
+}
+
+/**
  * Executes the convolution with the given parameters of the ConvolutionLayer
  * on the given input. The result is written into the destination tensor of
  * the given ConvolutionLayer.
@@ -573,24 +611,23 @@ ConvolutionLayer* Double_createConvolutionLayer(const DoubleTensor* kernel,
  * @throws IllegalArgumentException - When the ConvolutionLayer has no fixed destination,
  * but the destination pointer is `NULL`.
  */
-void ConvolutionLayer_forward(const ConvolutionLayer* layer, void* input) {
-    if (layer->isDestinationSet == false && layer->destination == NULL) {
-        (void)throwIllegalArgumentException("No destination is prohibited.");
-        return;
+void ConvolutionLayer_forward(const ConvolutionLayer* layer, const void* input) {
+    if (layer->base->isDestinationSet == false) {
+        (void)initDestinationTensor(layer, input);
     }
 
     switch (layer->base->inputType) {
     case _TENSOR_TYPE_INTEGER_:
         (void)IntegerTensor_convolve((IntegerTensor*)input, (IntegerTensor*)layer->kernel,
-            (IntegerTensor*)layer->destination, layer->stride);
+            (IntegerTensor*)layer->base->destination, layer->stride);
         break;
     case _TENSOR_TYPE_FLOAT_:
         (void)FloatTensor_convolve((FloatTensor*)input, (FloatTensor*)layer->kernel,
-                (FloatTensor*)layer->destination, layer->stride);
+                (FloatTensor*)layer->base->destination, layer->stride);
         break;
     case _TENSOR_TYPE_DOUBLE_:
         (void)DoubleTensor_convolve((DoubleTensor*)input, (DoubleTensor*)layer->kernel,
-                (DoubleTensor*)layer->destination, layer->stride);
+                (DoubleTensor*)layer->base->destination, layer->stride);
         break;
     }
 }

@@ -30,10 +30,12 @@ typedef enum {
 } LayerType;
 
 typedef struct Layer {
+    void* destination;
+    int isDestinationSet;
     TensorType inputType;
 } Layer;
 
-Layer *createLayer(const TensorType tensorType);
+Layer *createLayer(const TensorType tensorType, void* destination);
 void freeLayer(Layer* layer);
 
 #endif

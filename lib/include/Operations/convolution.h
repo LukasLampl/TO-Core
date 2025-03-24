@@ -28,8 +28,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 typedef struct {
     Layer* base;
     const void* kernel;
-    const void* destination;
-    int isDestinationSet;
     int stride;
 } ConvolutionLayer;
 
@@ -51,7 +49,7 @@ ConvolutionLayer* Float_createConvolutionLayer(const FloatTensor* kernel,
 ConvolutionLayer* Double_createConvolutionLayer(const DoubleTensor* kernel,
     const DoubleTensor* destination, const int stride);
     
-void ConvolutionLayer_forward(const ConvolutionLayer* layer, void* input);
+void ConvolutionLayer_forward(const ConvolutionLayer* layer, const void* input);
 
 void ConvolutionLayer_free(ConvolutionLayer* layer);
 

@@ -14,7 +14,8 @@ SRC_FILES = $(wildcard lib/src/main/*.c \
 			lib/src/tests/functionality/*.c \
 			lib/src/tests/profile/Integer/*.c \
 			lib/src/tests/functionality/Integer/*.c \
-			lib/src/tests/functionality/Utils/*.c)
+			lib/src/tests/functionality/Utils/*.c \
+			lib/src/tests/functionality/Network/*.c)
 
 # Object files (replace .c with .o for each source file)
 OBJ_FILES = $(SRC_FILES:.c=.o)

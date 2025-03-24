@@ -29,6 +29,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 #include "Tests/testTensorOperations.h"
 #include "Tests/testUtil.h"
+#include "Tests/testNetwork.h"
 
 int main() {
     ENV_UNIT_TESTING = 1;
@@ -62,7 +63,8 @@ int main() {
     testTensorClamp_002();
     testTensorClamp_003();*/
 
-    testList_001();
+    //testList_001();
+    test_SN_Convolution_001();
 
     if (ENV_PROFILE_TESTING) {
         /*profileTensorAdd_001();

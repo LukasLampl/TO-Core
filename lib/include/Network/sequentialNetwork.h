@@ -30,8 +30,26 @@ typedef struct {
 } SequentialNetwork;
 
 typedef struct {
-    void* layer;
+    const void* layer;
     LayerType type;
 } NetworkEntry;
+
+
+SequentialNetwork* createSequentialNetwork();
+
+void SequentialNetwork_addLayer(const SequentialNetwork* network,
+    const void* layer, const LayerType layerType);
+
+void SequentialNetwork_free(SequentialNetwork* network);
+
+
+IntegerTensor *Integer_SequentialNetwork_forward(const SequentialNetwork* network,
+    const IntegerTensor* tensor);
+
+FloatTensor *Float_SequentialNetwork_forward(const SequentialNetwork* network,
+    const FloatTensor* tensor);
+
+DoubleTensor *Double_SequentialNetwork_forward(const SequentialNetwork* network,
+    const DoubleTensor* tensor);
 
 #endif
