@@ -19,19 +19,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef SEQUENTIAL_NETWORK_H
-#define SEQUENTIAL_NETWORK_H
-
+#include "Error/exceptions.h"
 #include "Network/layer.h"
-#include "Utils/list.h"
 
-typedef struct {
-    List* layers;
-} SequentialNetwork;
+Layer *createLayer(const TensorType tensorType) {
+    Layer* layer = (Layer*)calloc(1, sizeof(Layer));
 
-typedef struct {
-    void* layer;
-    LayerType type;
-} NetworkEntry;
+    if (layer == NULL) {
+        (void)throwMemoryAllocationException("While trying to create new layer.");
+        return NULL;
+    }
 
-#endif
+    layer->inputType = tensorType;
+    return layer;
+}
+
+void freeLayer(Layer* layer) {
+    if (layer != NULL) {
+        (void)free(layer);
+    }
+}

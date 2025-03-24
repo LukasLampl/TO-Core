@@ -22,6 +22,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "Error/exceptions.h"
 #include "Tensor/tensor.h"
 #include "Operations/convolution.h"
+#include "Network/layer.h"
 
 #define true 1
 #define false 0
@@ -460,4 +461,150 @@ void FloatTensor_convolve(const FloatTensor* tensor,
 void DoubleTensor_convolve(const DoubleTensor* tensor,
     const DoubleTensor* kernel, const DoubleTensor* dest, const int stride) {
     (void)convolve(tensor, kernel, dest, stride, _TENSOR_TYPE_DOUBLE_);
+}
+
+/**
+ * Creates a ConvolutionLayer based on the given parameters.
+ * 
+ * @param *kernel       Kernel to use for the convolution.
+ * @param *destination  Optional destination of the convolution values.
+ * @param stride        Stride of the convolution.
+ * @param tensorType    Type of the tensors involved (all must be equal).
+ * 
+ * @throws NullPointerException - When the given kernel is `NULL`.
+ * @throws IllegalArgumentException - When the stride is not a positive integer.
+ */
+ConvolutionLayer* createConvolutionLayer(const void* kernel, const void* destination,
+    const int stride, const TensorType tensorType) {
+    if (kernel == NULL) {
+        (void)throwNullPointerException("Kernel of convolution must not be NULL!");
+        return NULL;
+    } else if (stride <= 0) {
+        (void)throwIllegalArgumentException("Stride must be a positive integer.");
+        return NULL;
+    }
+
+    Layer* base = (Layer*)createLayer(tensorType);
+    ConvolutionLayer* layer = (ConvolutionLayer*)calloc(1, sizeof(ConvolutionLayer));
+
+    if (base == NULL || layer == NULL) {
+        if (base != NULL) (void)free(base);
+        if (layer != NULL) (void)free(layer);
+        (void)throwMemoryAllocationException("While trying to generate ConvolutionLayer.");
+        return NULL;
+    }
+
+    layer->base = base;
+    layer->kernel = kernel;
+    layer->stride = stride;
+    layer->destination = destination;
+    layer->isDestinationSet = destination == NULL ? false : true;
+    return layer;
+}
+
+/**
+ * Creates a ConvolutionLayer with the given kernel, destination and stride.
+ * 
+ * <p><b>Note:</b><br>
+ * The destination must not be initialized and can be set to `NULL`. When set
+ * to `NULL` the used Network will generate the destination automatically.
+ * </p>
+ * 
+ * @param *kernel       The kernel to use for the convolution.
+ * @param *destination  Optional destination to which to write the results.
+ * @param stride        Stride of the convolution.
+ */
+ConvolutionLayer* Integer_createConvolutionLayer(const IntegerTensor* kernel,
+    const IntegerTensor* destination, const int stride) {
+    return (ConvolutionLayer*)createConvolutionLayer(kernel,
+        destination, stride, _TENSOR_TYPE_INTEGER_);
+}
+
+/**
+ * Creates a ConvolutionLayer with the given kernel, destination and stride.
+ * 
+ * <p><b>Note:</b><br>
+ * The destination must not be initialized and can be set to `NULL`. When set
+ * to `NULL` the used Network will generate the destination automatically.
+ * </p>
+ * 
+ * @param *kernel       The kernel to use for the convolution.
+ * @param *destination  Optional destination to which to write the results.
+ * @param stride        Stride of the convolution.
+ */
+ConvolutionLayer* Float_createConvolutionLayer(const FloatTensor* kernel,
+    const FloatTensor* destination, const int stride) {
+    return (ConvolutionLayer*)createConvolutionLayer(kernel,
+        destination, stride, _TENSOR_TYPE_FLOAT_);
+}
+
+/**
+ * Creates a ConvolutionLayer with the given kernel, destination and stride.
+ * 
+ * <p><b>Note:</b><br>
+ * The destination must not be initialized and can be set to `NULL`. When set
+ * to `NULL` the used Network will generate the destination automatically.
+ * </p>
+ * 
+ * @param *kernel       The kernel to use for the convolution.
+ * @param *destination  Optional destination to which to write the results.
+ * @param stride        Stride of the convolution.
+ */
+ConvolutionLayer* Double_createConvolutionLayer(const DoubleTensor* kernel,
+    const DoubleTensor* destination, const int stride) {
+    return (ConvolutionLayer*)createConvolutionLayer(kernel,
+        destination, stride, _TENSOR_TYPE_DOUBLE_);
+}
+
+/**
+ * Executes the convolution with the given parameters of the ConvolutionLayer
+ * on the given input. The result is written into the destination tensor of
+ * the given ConvolutionLayer.
+ * 
+ * <p><b>Warning:</b><br>
+ * The type of the input is determined by the layer type. This mean if the layer type
+ * if `IntegerTensor`, the input should also be an `IntegerTensor` or else undefined
+ * behaviour will occur.
+ * </p>
+ * 
+ * @param *layer    The ConvolutionLayer with all parameters for the convolution.
+ * @param *input    Pointer to the input that should be convolved.
+ * 
+ * @throws IllegalArgumentException - When the ConvolutionLayer has no fixed destination,
+ * but the destination pointer is `NULL`.
+ */
+void ConvolutionLayer_forward(const ConvolutionLayer* layer, void* input) {
+    if (layer->isDestinationSet == false && layer->destination == NULL) {
+        (void)throwIllegalArgumentException("No destination is prohibited.");
+        return;
+    }
+
+    switch (layer->base->inputType) {
+    case _TENSOR_TYPE_INTEGER_:
+        (void)IntegerTensor_convolve((IntegerTensor*)input, (IntegerTensor*)layer->kernel,
+            (IntegerTensor*)layer->destination, layer->stride);
+        break;
+    case _TENSOR_TYPE_FLOAT_:
+        (void)FloatTensor_convolve((FloatTensor*)input, (FloatTensor*)layer->kernel,
+                (FloatTensor*)layer->destination, layer->stride);
+        break;
+    case _TENSOR_TYPE_DOUBLE_:
+        (void)DoubleTensor_convolve((DoubleTensor*)input, (DoubleTensor*)layer->kernel,
+                (DoubleTensor*)layer->destination, layer->stride);
+        break;
+    }
+}
+
+/**
+ * Frees a given ConvolutionLayer.
+ * 
+ * @param *layer    ConvolutionLayer to free.
+ */
+void ConvolutionLayer_free(ConvolutionLayer* layer) {
+    if (layer == NULL) {
+        return;
+    }
+
+    (void)freeLayer(layer->base);
+    (void)free(layer);
 }

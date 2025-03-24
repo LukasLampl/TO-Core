@@ -19,19 +19,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef SEQUENTIAL_NETWORK_H
-#define SEQUENTIAL_NETWORK_H
+#ifndef LAYER_H
+#define LAYER_H
 
+#include "Tensor/tensor.h"
 #include "Network/layer.h"
-#include "Utils/list.h"
 
-typedef struct {
-    List* layers;
-} SequentialNetwork;
+typedef enum {
+    CONVOLUTION
+} LayerType;
 
-typedef struct {
-    void* layer;
-    LayerType type;
-} NetworkEntry;
+typedef struct Layer {
+    TensorType inputType;
+} Layer;
+
+Layer *createLayer(const TensorType tensorType);
+void freeLayer(Layer* layer);
 
 #endif
