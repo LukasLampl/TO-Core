@@ -367,6 +367,13 @@ ActivationLayer* createActivationLayer(const ActivationType activationType,
     return layer;
 }
 
+
+/**
+ * Forwards a given ReLU ActivationLayer with the given input.
+ * 
+ * @param *layer    ActivationLayer with processing information.
+ * @param *input    Input to process.
+ */
 void forward_ReLU(const ActivationLayer* layer, const void* input) {
     switch (layer->base->inputType) {
     case _TENSOR_TYPE_INTEGER_: {
@@ -384,6 +391,12 @@ void forward_ReLU(const ActivationLayer* layer, const void* input) {
     }
 }
 
+/**
+ * Forwards a given Leaky ReLU ActivationLayer with the given input.
+ * 
+ * @param *layer    ActivationLayer with processing information.
+ * @param *input    Input to process.
+ */
 void forward_LeakyReLU(const ActivationLayer* layer, const void* input) {
     switch (layer->base->inputType) {
     case _TENSOR_TYPE_INTEGER_: {
@@ -401,6 +414,12 @@ void forward_LeakyReLU(const ActivationLayer* layer, const void* input) {
     }
 }
 
+/**
+ * Forwards a given Sigmoid ActivationLayer with the given input.
+ * 
+ * @param *layer    ActivationLayer with processing information.
+ * @param *input    Input to process.
+ */
 void forward_Sigmoid(const ActivationLayer* layer, const void* input) {
     switch (layer->base->inputType) {
     case _TENSOR_TYPE_INTEGER_: {
@@ -418,6 +437,12 @@ void forward_Sigmoid(const ActivationLayer* layer, const void* input) {
     }
 }
 
+/**
+ * Forwards a given Tanh ActivationLayer with the given input.
+ * 
+ * @param *layer    ActivationLayer with processing information.
+ * @param *input    Input to process.
+ */
 void forward_Tanh(const ActivationLayer* layer, const void* input) {
     switch (layer->base->inputType) {
     case _TENSOR_TYPE_INTEGER_: {
