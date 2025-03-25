@@ -29,6 +29,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "testSuite.h"
 
 void testTensorMultiply_001() {
+    printf("TestTensorMultiply_001...\n");
     const int N = 16;
     int shape[1] = {N};
     int dimensions = 1;
@@ -51,9 +52,11 @@ void testTensorMultiply_001() {
     freeIntegerTensor(tensor_a);
     freeIntegerTensor(tensor_b);
     freeIntegerTensor(tensor_c);
+    printf("> Pass\n\n");
 }
 
 void testTensorMultiply_002() {
+    printf("TestTensorMultiply_002...\n");
     const int N = 16;
     int shape[1] = {N};
     int dimensions = 1;
@@ -76,9 +79,11 @@ void testTensorMultiply_002() {
     freeFloatTensor(tensor_a);
     freeFloatTensor(tensor_b);
     freeFloatTensor(tensor_c);
+    printf("> Pass\n\n");
 }
 
 void testTensorAdd_001() {
+    printf("TestTensorAdd_001...\n");
     const int N = 16;
     int shape[1] = {N};
     int dimensions = 1;
@@ -101,9 +106,11 @@ void testTensorAdd_001() {
     freeIntegerTensor(tensor_a);
     freeIntegerTensor(tensor_b);
     freeIntegerTensor(tensor_c);
+    printf("> Pass\n\n");
 }
 
 void testTensorDivide_001() {
+    printf("TestTensorDivide_001...\n");
     const int N = 16;
     int shape[1] = {N};
     int dimensions = 1;
@@ -126,9 +133,11 @@ void testTensorDivide_001() {
     freeIntegerTensor(tensor_a);
     freeIntegerTensor(tensor_b);
     freeIntegerTensor(tensor_c);
+    printf("> Pass\n\n");
 }
 
 void testTensorSubtract_001() {
+    printf("TestTensorSubtract_001...\n");
     const int N = 16;
     int shape[1] = {N};
     int dimensions = 1;
@@ -151,4 +160,5 @@ void testTensorSubtract_001() {
     freeIntegerTensor(tensor_a);
     freeIntegerTensor(tensor_b);
     freeIntegerTensor(tensor_c);
+    printf("> Pass\n\n");
 }

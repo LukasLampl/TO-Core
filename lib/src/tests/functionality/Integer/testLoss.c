@@ -28,6 +28,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "testSuite.h"
 
 void testTensorMSE_001() {
+    printf("TestTensorMSE...\n");
     int shape[] = {5};
     IntegerTensor* t_1 = IntegerTensor_zeros(1, shape);
     IntegerTensor* t_2 = IntegerTensor_zeros(1, shape);
@@ -46,9 +47,11 @@ void testTensorMSE_001() {
 
     double MSE = IntegerTensor_MSE(t_1, t_2);
     testSuite_assertEquals(8, MSE);
+    printf("> Pass\n\n");
 }
 
 void testTensorSAD_001() {
+    printf("TestTensorSAD_001...\n");
     int shape[] = {5};
     IntegerTensor* t_1 = IntegerTensor_zeros(1, shape);
     IntegerTensor* t_2 = IntegerTensor_zeros(1, shape);
@@ -67,9 +70,11 @@ void testTensorSAD_001() {
 
     double SAD = IntegerTensor_SAD(t_1, t_2);
     testSuite_assertEquals(12, SAD);
+    printf("> Pass\n\n");
 }
 
 void testTensorMAD_001() {
+    printf("TestTensorMAD_001...\n");
     int shape[] = {5};
     IntegerTensor* t_1 = IntegerTensor_zeros(1, shape);
     IntegerTensor* t_2 = IntegerTensor_zeros(1, shape);
@@ -88,4 +93,5 @@ void testTensorMAD_001() {
 
     double MAD = IntegerTensor_MAD(t_1, t_2);
     testSuite_assertEquals(2.4, MAD);
+    printf("> Pass\n\n");
 }

@@ -26,27 +26,34 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "Tests/testTensorOperations.h"
 
 void testTensorMean_001() {
+    printf("TestTensorMean_001...\n");
     int shape[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     IntegerTensor* t = IntegerTensor_ones(10, shape);
     double mean = IntegerTensor_getMean(t);
     testSuite_assertEquals(1, mean);
+    printf("> Pass\n\n");
 }
 
 void testTensorMean_002() {
+    printf("TestTensorMean_002...\n");
     int shape[] = {12, 42, 8};
     IntegerTensor* t = IntegerTensor_zeros(3, shape);
     double mean = IntegerTensor_getMean(t);
     testSuite_assertEquals(0, mean);
+    printf("> Pass\n\n");
 }
 
 void testTensorStdDev_001() {
+    printf("TestTensorStdDev_001...\n");
     int shape[] = {12, 42, 8};
     IntegerTensor* t = IntegerTensor_zeros(3, shape);
     double stdDev = IntegerTensor_getStandardDeviation(t);
     testSuite_assertEquals(0, stdDev);
+    printf("> Pass\n\n");
 }
 
 void testTensorStdDev_002() {
+    printf("TestTensorStdDev_002...\n");
     int shape[] = {3, 2, 2};
     IntegerTensor* t = IntegerTensor_zeros(3, shape);
 
@@ -56,4 +63,5 @@ void testTensorStdDev_002() {
 
     double stdDev = IntegerTensor_getStandardDeviation(t);
     testSuite_assertEquals(3.4520525, stdDev);
+    printf("> Pass\n\n");
 }

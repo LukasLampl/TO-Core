@@ -24,6 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "Network/sequentialNetwork.h"
 
 #include "Operations/convolution.h"
+#include "Operations/activation.h"
 
 #define true 1
 #define false 0
@@ -59,7 +60,19 @@ void SequentialNetwork_addLayer(const SequentialNetwork* network,
 
 void SequentialNetwork_free(SequentialNetwork* network) {
     for (int i = 0; i < network->layers->size; i++) {
-        (void)free((void*)List_get(network->layers, i));
+        NetworkEntry* entry = (NetworkEntry*)List_get(network->layers, i);
+        void* layer = (void*)entry->layer;
+
+        switch (entry->type) {
+        case CONVOLUTION:
+            (void)ConvolutionLayer_free(layer);
+            break;
+        case ACTIVATION:
+            (void)ActivationLayer_free(layer);
+            break;
+        }
+
+        (void)free(entry);
     }
 
     (void)List_free(network->layers);
@@ -72,6 +85,11 @@ void* executeLayer(const NetworkEntry* entry, void* input) {
         ConvolutionLayer* layer = (ConvolutionLayer*)entry->layer;
         (void)ConvolutionLayer_forward(layer, input);
         return layer->base->destination;
+    case ACTIVATION: {
+        ActivationLayer* layer = (ActivationLayer*)entry->layer;
+        (void)ActivationLayer_forward(layer, input);
+        return layer->base->destination;
+    }
     }
     }
 

@@ -48,23 +48,26 @@ int main() {
 
     testTensorMSE_001();
     testTensorSAD_001();
-    testTensorMAD_001();*/
+    testTensorMAD_001();
 
-    /*testTensorMean_001();
+    testTensorMean_001();
     testTensorMean_002();
 
     testTensorStdDev_001();
-    testTensorStdDev_002();*/
+    testTensorStdDev_002();
 
-    /*testTensorArgMin_001();
+    testTensorArgMin_001();
     testTensorArgMax_001();
 
     testTensorClamp_001();
     testTensorClamp_002();
     testTensorClamp_003();*/
 
-    //testList_001();
+    testList_001();
     test_SN_Convolution_001();
+    test_SN_Convolution_002();
+    test_SN_Activation_001();
+    test_SN_Activation_002();
 
     if (ENV_PROFILE_TESTING) {
         /*profileTensorAdd_001();

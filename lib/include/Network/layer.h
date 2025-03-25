@@ -26,7 +26,8 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "Network/layer.h"
 
 typedef enum {
-    CONVOLUTION
+    CONVOLUTION,
+    ACTIVATION
 } LayerType;
 
 typedef struct Layer {

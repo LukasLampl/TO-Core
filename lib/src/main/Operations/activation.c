@@ -24,6 +24,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "Tensor/tensor.h"
 #include "Operations/activation.h"
 #include "mathUtils.h"
+#include "Error/exceptions.h"
 
 /**
  * Calculates the ReLU of a given data tensor and sets the results back
@@ -338,4 +339,174 @@ void FloatTensor_Tanh(FloatTensor* tensor) {
  */
 void DoubleTensor_Tanh(DoubleTensor* tensor) {
     (void)Tanh(tensor->data, tensor->base, _TENSOR_TYPE_DOUBLE_);
+}
+
+/**
+ * Creates an ActivationLayer that defines the type of activation function
+ * to apply to a certain input at a certain stage in a network.
+ * 
+ * @param activationType    The activation function to apply.
+ * @param alpha             Optional alpha to use (Only available for certain functions).
+ * @param tensorType        Type of the input tensor.
+ */
+ActivationLayer* createActivationLayer(const ActivationType activationType,
+    const double alpha, const TensorType tensorType) {
+    Layer* base = (Layer*)createLayer(tensorType, NULL);
+    ActivationLayer* layer = (ActivationLayer*)calloc(1, sizeof(ActivationLayer));
+
+    if (base == NULL || layer == NULL) {
+        if (base != NULL) (void)free(base);
+        if (layer != NULL) (void)free(layer);
+        (void)throwMemoryAllocationException("While trying to generate ActivationLayer.");
+        return NULL;
+    }
+
+    layer->base = base;
+    layer->type = activationType;
+    layer->alpha = alpha;
+    return layer;
+}
+
+void forward_ReLU(const ActivationLayer* layer, const void* input) {
+    switch (layer->base->inputType) {
+    case _TENSOR_TYPE_INTEGER_: {
+        (void)IntegerTensor_ReLU((IntegerTensor*)input);
+        break;
+    }
+    case _TENSOR_TYPE_FLOAT_: {
+        (void)FloatTensor_ReLU((FloatTensor*)input);
+        break;
+    }
+    case _TENSOR_TYPE_DOUBLE_: {
+        (void)DoubleTensor_ReLU((DoubleTensor*)input);
+        break;
+    }
+    }
+}
+
+void forward_LeakyReLU(const ActivationLayer* layer, const void* input) {
+    switch (layer->base->inputType) {
+    case _TENSOR_TYPE_INTEGER_: {
+        (void)IntegerTensor_LeakyReLU((IntegerTensor*)input, layer->alpha);
+        break;
+    }
+    case _TENSOR_TYPE_FLOAT_: {
+        (void)FloatTensor_LeakyReLU((FloatTensor*)input, layer->alpha);
+        break;
+    }
+    case _TENSOR_TYPE_DOUBLE_: {
+        (void)DoubleTensor_LeakyReLU((DoubleTensor*)input, layer->alpha);
+        break;
+    }
+    }
+}
+
+void forward_Sigmoid(const ActivationLayer* layer, const void* input) {
+    switch (layer->base->inputType) {
+    case _TENSOR_TYPE_INTEGER_: {
+        (void)IntegerTensor_Sigmoid((IntegerTensor*)input);
+        break;
+    }
+    case _TENSOR_TYPE_FLOAT_: {
+        (void)FloatTensor_Sigmoid((FloatTensor*)input);
+        break;
+    }
+    case _TENSOR_TYPE_DOUBLE_: {
+        (void)DoubleTensor_Sigmoid((DoubleTensor*)input);
+        break;
+    }
+    }
+}
+
+void forward_Tanh(const ActivationLayer* layer, const void* input) {
+    switch (layer->base->inputType) {
+    case _TENSOR_TYPE_INTEGER_: {
+        (void)IntegerTensor_Tanh((IntegerTensor*)input);
+        break;
+    }
+    case _TENSOR_TYPE_FLOAT_: {
+        (void)FloatTensor_Tanh((FloatTensor*)input);
+        break;
+    }
+    case _TENSOR_TYPE_DOUBLE_: {
+        (void)DoubleTensor_Tanh((DoubleTensor*)input);
+        break;
+    }
+    }
+}
+
+/**
+ * Creates an ActivationLayer with the given activation function.
+ * 
+ * @param activationType    Type of activation function to apply.
+ * @param alpha             Alpha to apply, when needed (only certain functions need this).
+ */
+ActivationLayer* Integer_createActivationLayer(const ActivationType activationType,
+    const int alpha) {
+    return (ActivationLayer*)createActivationLayer(activationType, alpha, _TENSOR_TYPE_INTEGER_);
+}
+
+/**
+ * Creates an ActivationLayer with the given activation function.
+ * 
+ * @param activationType    Type of activation function to apply.
+ * @param alpha             Alpha to apply, when needed (only certain functions need this).
+ */
+ActivationLayer* Float_createActivationLayer(const ActivationType activationType,
+    const int alpha) {
+    return (ActivationLayer*)createActivationLayer(activationType, alpha, _TENSOR_TYPE_FLOAT_);
+}
+
+/**
+ * Creates an ActivationLayer with the given activation function.
+ * 
+ * @param activationType    Type of activation function to apply.
+ * @param alpha             Alpha to apply, when needed (only certain functions need this).
+ */
+ActivationLayer* Double_createActivationLayer(const ActivationType activationType,
+    const int alpha) {
+    return (ActivationLayer*)createActivationLayer(activationType, alpha, _TENSOR_TYPE_DOUBLE_);
+}
+
+/**
+ * Applies the activation function on the given input.
+ * 
+ * <p><b>Important:</b><br>
+ * The input itself is modified.
+ * </p>
+ * 
+ * @param *layer    The ActivationLayer to apply.
+ * @param *input    Input on which to apply the ActivationLayer.
+ */
+void ActivationLayer_forward(ActivationLayer* layer, void* input) {
+    switch (layer->type) {
+    case RELU:
+        (void)forward_ReLU(layer, input);
+        break;
+    case LEAKY_RELU:
+        (void)forward_LeakyReLU(layer, input);
+        break;
+    case SIGMOID:
+        (void)forward_Sigmoid(layer, input);
+        break;
+    case TANH:
+        (void)forward_Tanh(layer, input);
+        break;
+    }
+
+    layer->base->destination = input;
+}
+
+/**
+ * Frees a given ActivationLayer.
+ * 
+ * @param *layer    The layer to free.
+ */
+void ActivationLayer_free(ActivationLayer* layer) {
+    if (layer == NULL) {
+        return;
+    }
+
+    (void)free(layer->base);
+    (void)free(layer);
 }

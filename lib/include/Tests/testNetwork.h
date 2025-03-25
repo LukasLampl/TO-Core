@@ -23,5 +23,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #define TEST_NETWORK_H
 
 void test_SN_Convolution_001();
+void test_SN_Convolution_002();
+
+void test_SN_Activation_001();
+void test_SN_Activation_002();
 
 #endif

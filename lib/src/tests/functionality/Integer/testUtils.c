@@ -26,6 +26,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "Tests/testTensorOperations.h"
 
 void testTensorArgMin_001() {
+    printf("TestTensorArgMin_001...\n");
     int shape[] = {2, 3};
     IntegerTensor* tensor = IntegerTensor_zeros(2, shape);
 
@@ -37,9 +38,11 @@ void testTensorArgMin_001() {
     printf("Min index: %ld\n", minIndex);
 
     testSuite_assertEquals(tensor->base->dataPoints - 1, minIndex);
+    printf("> Pass\n\n");
 }
 
 void testTensorArgMax_001() {
+    printf("TestTensorArgMax_001...\n");
     int shape[] = {2, 3};
     IntegerTensor* tensor = IntegerTensor_zeros(2, shape);
 
@@ -51,9 +54,11 @@ void testTensorArgMax_001() {
     printf("Max index: %ld\n", minIndex);
 
     testSuite_assertEquals(0, minIndex);
+    printf("> Pass\n\n");
 }
 
 void testTensorClamp_001() {
+    printf("TestTensorClamp_001...\n");
     int shape[] = {2, 3};
     int max = 4;
     int min = 0;
@@ -71,9 +76,12 @@ void testTensorClamp_001() {
         const int num = dest->data[i];
         (void)testSuite_assertInBetween(num, min, max);
     }
+
+    printf("> Pass\n\n");
 }
 
 void testTensorClamp_002() {
+    printf("TestTensorClamp_002...\n");
     int shape[] = {2, 3};
     float min = 0.2;
     float max = 4.75;
@@ -91,9 +99,12 @@ void testTensorClamp_002() {
         const float num = dest->data[i];
         (void)testSuite_assertInBetween(num, min, max);
     }
+
+    printf("> Pass\n\n");
 }
 
 void testTensorClamp_003() {
+    printf("TestTensorClamp_003...\n");
     int shape[] = {2, 3};
     double min = 0.4125645;
     double max = 5.2139874;
@@ -111,4 +122,6 @@ void testTensorClamp_003() {
         const double num = dest->data[i];
         (void)testSuite_assertInBetween(num, min, max);
     }
+
+    printf("> Pass\n\n");
 }

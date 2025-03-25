@@ -50,6 +50,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #include "Tensor/tensor.h"
 #include "Operations/activation.h"
 #include "mathUtils.h"
+#include "Network/layer.h"
+
+typedef enum {
+    RELU,
+    LEAKY_RELU,
+    SIGMOID,
+    TANH
+} ActivationType;
+
+typedef struct {
+    Layer* base;
+    ActivationType type;
+    double alpha;
+} ActivationLayer;
 
 void IntegerTensor_ReLU(IntegerTensor* tensor);
 void FloatTensor_ReLU(FloatTensor* tensor);
@@ -66,5 +80,18 @@ void DoubleTensor_Sigmoid(DoubleTensor* tensor);
 void IntegerTensor_Tanh(IntegerTensor* tensor);
 void FloatTensor_Tanh(FloatTensor* tensor);
 void DoubleTensor_Tanh(DoubleTensor* tensor);
+
+ActivationLayer* Integer_createActivationLayer(const ActivationType activationType,
+    const int alpha);
+
+ActivationLayer* Float_createActivationLayer(const ActivationType activationType,
+    const int alpha);
+
+ActivationLayer* Double_createActivationLayer(const ActivationType activationType,
+    const int alpha);
+
+void ActivationLayer_forward(ActivationLayer* layer, void* input);
+
+void ActivationLayer_free(ActivationLayer* layer);
 
 #endif
